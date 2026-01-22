@@ -43,7 +43,7 @@ resource-fedora/
 │
 ├── 🎨 主题与终端
 │   ├── tokyo-night.toml     # Starship Tokyo Night 主题配置
-│   └── .tmux.conf           # Tmux 终端复用器配置
+│   └── .tmux.conf           # Tmux 终端复用器配置 (详见 [Tmux 配置指南](docs/TMUX.md))
 │
 ├── ✏️ 编辑器配置
 │   ├── .vimrc               # Vim 编辑器配置
@@ -62,7 +62,9 @@ resource-fedora/
 ├── 📜 脚本与文档
 │   ├── setup.sh             # 系统配置部署脚本 (一键/分别配置)
 │   ├── GEMINI.md            # AI 助手行为准则配置
-│   └── README.md            # 本文档
+│   ├── README.md            # 本文档
+│   └── docs/                # 详细文档目录
+│       └── TMUX.md          # Tmux 配置完整指南
 │
 └── .gitignore               # Git 忽略规则
 ```
@@ -251,13 +253,31 @@ bash setup.sh --help
 
 ### Tmux 配置 (`.tmux.conf`)
 
-- **大小**: 7.6KB
+- **大小**: 8KB+ (增强版)
+- **前缀键**: `Ctrl+a` (替代默认 `Ctrl+b`)
+- **主题**: Dracula 配色
 - **特性**:
   - TPM 插件管理器
-  - 自定义状态栏
-  - 快捷键优化
+  - True Color (24位真彩色) 支持
+  - 自定义状态栏 (CPU/内存/时间)
+  - 快捷键优化 (Vi 风格)
   - 鼠标支持
-- **适用场景**: 终端复用、远程会话管理
+  - **10+ 插件集成**:
+    - vim-tmux-navigator (Vim/Tmux 无缝导航)
+    - tmux-resurrect (会话保存)
+    - tmux-continuum (自动恢复)
+    - tmux-fzf (模糊搜索)
+    - extrakto (文本提取)
+    - tmux-yank (剪贴板)
+  - **浮动窗口 (Popup)**:
+    - Lazygit/Gitui (Git TUI)
+    - Htop (系统监控)
+    - Ranger (文件管理器)
+  - **Shell 快捷创建**: Bash, Zsh, Fish, Nushell
+  - **Python 开发**: Python, IPython, Jupyter Lab
+  - **会话持久化**: 自动保存/恢复 (每10分钟)
+- **适用场景**: 终端复用、远程会话管理、开发环境
+- **📖 详细文档**: [Tmux 配置完整指南](docs/TMUX.md) (快捷键速查、插件说明、FAQ)
 
 ### Git 配置 (`.gitconfig`)
 
