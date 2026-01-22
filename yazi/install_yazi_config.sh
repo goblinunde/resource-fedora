@@ -151,7 +151,8 @@ install_plugins() {
     install_plugin_if_missing "rich-preview.yazi" "Reledia/rich-preview.yazi"
     
     # Jupyter Notebook 预览 (需要 nbpreview)
-    install_plugin_if_missing "nbpreview.yazi" "AnirudhG07/nbpreview.yazi"
+    # ⚠️ 临时禁用: nbpreview 在 Python 3.14 下编译失败
+    # install_plugin_if_missing "nbpreview.yazi" "AnirudhG07/nbpreview.yazi"
     
     # DuckDB 数据预览 (需要 duckdb)
     install_plugin_if_missing "duckdb.yazi" "hankertrix/duckdb.yazi"
@@ -191,7 +192,7 @@ check_dependencies() {
     done
     
     # 💡 Python 工具 (通过 uv 安装)
-    local python_tools=("rich" "nbpreview")
+    local python_tools=("rich")  # nbpreview 暂时禁用 (Python 3.14 编译问题)
     for tool in "${python_tools[@]}"; do
         if ! command_exists "$tool"; then
             missing_python+=("$tool")
@@ -279,7 +280,7 @@ check_dependencies() {
                     print_info "安装 $tool..."
                     case $tool in
                         "rich") uv tool install rich-cli ;;
-                        "nbpreview") uv tool install nbpreview ;;
+                        # "nbpreview") uv tool install nbpreview ;;  # 暂时禁用
                     esac
                 done
                 print_success "Python 工具安装完成"
@@ -291,7 +292,7 @@ check_dependencies() {
             for tool in "${missing_python[@]}"; do
                 case $tool in
                     "rich") echo "  uv tool install rich-cli" ;;
-                    "nbpreview") echo "  uv tool install nbpreview" ;;
+                    # "nbpreview") echo "  uv tool install nbpreview" ;;  # 暂时禁用
                 esac
             done
         fi

@@ -287,12 +287,13 @@ run = 'piper -- sh -c ''if command -v rich &>/dev/null; then rich --json --force
 url = "*.csv"
 run = 'piper -- sh -c ''if command -v rich &>/dev/null; then rich --csv --force-terminal --width=$w "$1"; else bat -p --color=always --style=numbers,grid "$1"; fi'''
 
-[[plugin.prepend_previewers]]
-# Jupyter Notebook 预览
-# 💡 依赖: nbpreview (uv tool install nbpreview)
-# 💡 功能: 渲染 .ipynb 文件为可读格式
-url = "*.ipynb"
-run = 'piper -- sh -c ''if command -v nbpreview &>/dev/null; then nbpreview "$1"; else echo "安装 nbpreview: uv tool install nbpreview"; fi'''
+# [[plugin.prepend_previewers]]
+# # Jupyter Notebook 预览
+# # 💡 依赖: nbpreview (uv tool install nbpreview)
+# # 💡 功能: 渲染 .ipynb 文件为可读格式
+# # ⚠️  临时禁用: nbpreview 在 Python 3.14 下编译 Pillow 失败
+# url = "*.ipynb"
+# run = 'piper -- sh -c ''if command -v nbpreview &>/dev/null; then nbpreview "$1"; else echo "Jupyter Notebook 预览暂不可用"; fi'''
 
 [[plugin.prepend_previewers]]
 # Parquet 数据预览 - 使用 duckdb
