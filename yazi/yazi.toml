@@ -48,7 +48,7 @@ title_format = "Yazi: {cwd}"
 [preview]
 # 💡 文本换行方式
 # 可选值: "no" | "wrap"
-wrap = "no"
+wrap = "wrap"
 
 # 💡 Tab 缩进大小
 tab_size = 2
