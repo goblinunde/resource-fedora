@@ -75,11 +75,22 @@ resource-fedora/
 ├── 🔧 开发工具配置
 │   ├── .gitconfig           # Git 全局配置 (含 LFS、代理)
 │   ├── .condarc             # Conda 包管理器配置
-│   └── ruff/                # Ruff Python linter 配置
-│       └── ruff-receipt.json
-│
+│   ├── ruff/                # Ruff Python linter 配置
+│   │   └── ruff-receipt.json
+│   └── yazi/                # Yazi 文件管理器配置
+│       ├── yazi.toml        # Yazi 主配置文件
+│       ├── keymap.toml      # 键位绑定配置
+│       ├── theme.toml       # Tokyo Night 主题
+│       ├── init.lua         # 插件初始化
+│       ├── plugins/         # 插件目录
+│       ├── themes/          # 多主题配置
+│       ├── README.md        # Yazi 配置说明
+│       ├── YAZI_CONFIG_GUIDE.md  # 详细配置指南
+│       └── install_yazi_config.sh # 自动安装脚本
+
 ├── 📜 脚本与文档
 │   ├── setup.sh             # 系统配置部署脚本 (一键/分别配置)
+│   ├── Makefile             # Make 任务管理 (推荐使用)
 │   ├── GEMINI.md            # AI 助手行为准则配置
 │   ├── README.md            # 本文档
 │   └── docs/                # 详细文档目录
@@ -87,6 +98,7 @@ resource-fedora/
 │       ├── DEV_ENV_UBUNTU.md   # Ubuntu 开发环境配置指南
 │       ├── ENV_VARS.md         # 环境变量配置指南
 │       ├── COMMON_COMMANDS.md  # 常用命令速查表
+│       ├── SHELL_CONFIG_GUIDE.md  # Shell 配置文件完整解析
 │       ├── TMUX.md          # Tmux 配置完整指南
 │       └── VIM.md           # Vim 配置完整指南
 │
@@ -349,6 +361,51 @@ bash setup.sh --help
   - **会话持久化**: 自动保存/恢复 (每10分钟)
 - **适用场景**: 终端复用、远程会话管理、开发环境
 - **📖 详细文档**: [Tmux 配置完整指南](docs/TMUX.md) (快捷键速查、插件说明、FAQ)
+
+### Yazi 配置 (`yazi/`)
+
+- **版本**: 26.1.4+
+- **主题**: Tokyo Night
+- **特性**:
+  - **20+ 种文件格式预览**:
+    - **文档**: PDF (pdftoppm 图片预览)
+    - **数据**: CSV/TSV/Parquet (Rich-CLI/DuckDB 数据分析)
+    - **科学计算**: Jupyter Notebook (.ipynb 渲染)
+    - **媒体**: 音频元数据、视频信息、字幕预览
+    - **文本**: 美化 Markdown/JSON 显示
+  - **增强插件系统**:
+    - piper.yazi (管道预览)
+    - rich-preview.yazi (Rich CLI 美化)
+    - nbpreview.yazi (Jupyter 预览)
+    - duckdb.yazi (数据分析)
+    - exifaudio.yazi / mediainfo.yazi (媒体元数据)
+  - **Vim 风格键位** - 完全兼容 Vim 操作习惯
+  - **多主题切换** - Tokyo Night, Catppuccin, Gruvbox, Nord
+  - **智能依赖检查** - 自动检测并提示安装缺失工具
+- **配置文件**:
+  - `yazi.toml` - 主配置 (10K+, 含中文注释)
+  - `keymap.toml` - 键位绑定
+  - `theme.toml` - 主题配置
+  - `init.lua` - 插件初始化
+- **快速部署**:
+
+  ```bash
+  # 使用 Makefile
+  make deploy-yazi
+  
+  # 或直接运行安装脚本
+  bash yazi/install_yazi_config.sh
+  ```
+
+- **依赖工具**:
+  - **基础**: bat, glow, eza, hexyl
+  - **高级预览**: poppler-utils, exiftool, ffmpeg, mediainfo, duckdb
+  - **Python 工具**: rich-cli, nbpreview (通过 uv 安装)
+- **适用场景**: 终端文件管理、快速预览、开发辅助
+- **📖 详细文档**:
+  - [Yazi 配置说明](yazi/README.md)
+  - [配置完整指南](yazi/YAZI_CONFIG_GUIDE.md)
+  - [主题切换指南](yazi/THEMES.md)
 
 ### Git 配置 (`.gitconfig`)
 
