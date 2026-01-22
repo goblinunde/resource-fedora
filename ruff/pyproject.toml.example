@@ -1,0 +1,40 @@
+# ============================================================================
+# PyTorch 项目专用 Ruff 配置示例
+# 用于 PyTorch 深度学习项目
+# ============================================================================
+
+[tool.ruff]
+target-version = "py310"
+line-length = 100
+
+[tool.ruff.lint]
+select = ["F", "E", "W", "I", "D", "UP", "B", "SIM", "NPY", "RUF"]
+ignore = ["D100", "D101", "D102", "D103", "S301", "B008"]
+
+[tool.ruff.lint.per-file-ignores]
+# 模型文件允许更复杂的结构
+"models/*.py" = ["E501", "C901"]
+# 训练脚本允许较长的行和复杂函数
+"train.py" = ["E501", "C901", "PLR0912", "PLR0915"]
+# 数据加载器允许 lambda
+"datasets/*.py" = ["E731"]
+
+[tool.ruff.lint.isort]
+known-third-party = ["torch", "torchvision", "numpy", "tqdm", "wandb"]
+
+[tool.ruff.lint.pydocstyle]
+convention = "numpy"
+
+# ============================================================================
+# TensorFlow 项目专用配置示例
+# ============================================================================
+
+# [tool.ruff.lint.isort]
+# known-third-party = ["tensorflow", "keras", "numpy", "pandas", "tensorboard"]
+
+# ============================================================================
+# JAX 项目专用配置示例
+# ============================================================================
+
+# [tool.ruff.lint.isort]
+# known-third-party = ["jax", "jaxlib", "flax", "optax", "numpy", "einops"]

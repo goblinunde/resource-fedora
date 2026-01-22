@@ -1,0 +1,251 @@
+# ============================================================================
+# Ruff 配置文件 - 深度学习开发优化版
+# 针对 PyTorch, TensorFlow, JAX 优化
+# 作者: SMLYFM <yytcjx@gmail.com>
+# Ruff: https://github.com/astral-sh/ruff
+# ============================================================================
+
+# ========================================================================
+# 基础配置
+# ========================================================================
+
+# Python 目标版本
+target-version = "py310"
+
+# 行长度限制 (深度学习代码通常较长)
+line-length = 100
+
+# 缩进宽度
+indent-width = 4
+
+# 排除目录
+exclude = [
+    ".git",
+    ".venv",
+    "venv",
+    "__pycache__",
+    ".pytest_cache",
+    ".ruff_cache",
+    "build",
+    "dist",
+    "*.egg-info",
+    ".ipynb_checkpoints",
+    "wandb",  # Weights & Biases 日志
+    "lightning_logs",  # PyTorch Lightning 日志
+    "outputs",  # Hydra 输出
+    "checkpoints",  # 模型检查点
+]
+
+# ========================================================================
+# Lint 规则配置
+# ========================================================================
+
+[lint]
+# 启用的规则集
+select = [
+    # Pyflakes (基础错误检查)
+    "F",
+    # pycodestyle (代码风格)
+    "E",
+    "W",
+    # isort (导入排序)
+    "I",
+    # pydocstyle (文档字符串)
+    "D",
+    # pyupgrade (现代化 Python 语法)
+    "UP",
+    # flake8-bugbear (常见错误模式)
+    "B",
+    # flake8-simplify (简化代码)
+    "SIM",
+    # flake8-comprehensions (列表推导优化)
+    "C4",
+    # flake8-pie (各种改进)
+    "PIE",
+    # flake8-return (return 语句优化)
+    "RET",
+    # flake8-use-pathlib (使用 pathlib)
+    "PTH",
+    # flake8-annotations (类型注解)
+    "ANN",
+    # flake8-bandit (安全检查)
+    "S",
+    # NumPy 特定规则
+    "NPY",
+    # Pandas 特定规则
+    "PD",
+    # Ruff 特定规则
+    "RUF",
+]
+
+# 忽略的规则
+ignore = [
+    # 文档字符串相关 (科学计算代码可能不需要完整文档)
+    "D100",  # 缺少模块文档
+    "D101",  # 缺少类文档
+    "D102",  # 缺少方法文档
+    "D103",  # 缺少函数文档
+    "D104",  # 缺少包文档
+    "D105",  # 缺少魔术方法文档
+    "D107",  # 缺少 __init__ 文档
+    
+    # 类型注解相关 (深度学习代码类型注解可选)
+    "ANN101",  # 缺少 self 类型注解
+    "ANN102",  # 缺少 cls 类型注解
+    "ANN401",  # 使用 Any 类型
+    
+    # 安全相关 (科学计算常用但被标记为不安全的操作)
+    "S301",  # pickle 使用 (模型保存常用)
+    "S403",  # pickle 导入
+    "S404",  # subprocess 导入
+    "S603",  # subprocess 调用
+    
+    # 其他
+    "E501",  # 行太长 (由 line-length 控制)
+    "B008",  # 函数调用作为默认参数 (PyTorch 常用模式)
+    "RET504", # 不必要的赋值 (提高可读性)
+]
+
+# 每个文件允许的自动修复规则
+fixable = ["ALL"]
+unfixable = []
+
+# ========================================================================
+# 特定规则配置
+# ========================================================================
+
+[lint.per-file-ignores]
+# 测试文件
+"test_*.py" = [
+    "S101",  # 允许 assert
+    "ANN",   # 不需要类型注解
+    "D",     # 不需要文档字符串
+]
+"*_test.py" = [
+    "S101",
+    "ANN",
+    "D",
+]
+
+# Jupyter notebooks
+"*.ipynb" = [
+    "D",     # 不需要文档字符串
+    "E402",  # 模块层级导入
+    "I001",  # 导入排序
+]
+
+# 配置文件
+"config.py" = [
+    "E501",  # 行太长
+]
+"**/configs/**" = [
+    "E501",
+]
+
+# 数据加载器
+"**/data/**" = [
+    "S301",  # pickle
+]
+"**/datasets/**" = [
+    "S301",
+]
+
+# ========================================================================
+# isort 配置 (导入排序)
+# ========================================================================
+
+[lint.isort]
+# 已知的第三方库
+known-third-party = [
+    # 深度学习框架
+    "torch",
+    "torchvision",
+    "torchaudio",
+    "torch_geometric",
+    "pytorch_lightning",
+    "lightning",
+    "tensorflow",
+    "keras",
+    "jax",
+    "jaxlib",
+    "flax",
+    "optax",
+    "haiku",
+    
+    # 科学计算
+    "numpy",
+    "scipy",
+    "pandas",
+    "sklearn",
+    "scikit-learn",
+    
+    # 可视化
+    "matplotlib",
+    "seaborn",
+    "plotly",
+    "tensorboard",
+    "wandb",
+    
+    # 实用工具
+    "tqdm",
+    "hydra",
+    "omegaconf",
+    "einops",
+    "timm",
+    "transformers",
+    "diffusers",
+]
+
+# 导入顺序: FUTURE, STDLIB, THIRDPARTY, FIRSTPARTY, LOCALFOLDER
+force-sort-within-sections = true
+split-on-trailing-comma = true
+
+# ========================================================================
+# pydocstyle 配置 (文档字符串)
+# ========================================================================
+
+[lint.pydocstyle]
+# 使用 NumPy 文档风格 (科学计算标准)
+convention = "numpy"
+
+# ========================================================================
+# flake8-annotations 配置
+# ========================================================================
+
+[lint.flake8-annotations]
+# 允许动态类型 Tensor (PyTorch/TensorFlow/JAX)
+allow-star-arg-any = true
+suppress-none-returning = true
+
+# ========================================================================
+# McCabe 复杂度
+# ========================================================================
+
+[lint.mccabe]
+# 最大复杂度 (深度学习模型可能较复杂)
+max-complexity = 15
+
+# ========================================================================
+# pycodestyle 配置
+# ========================================================================
+
+[lint.pycodestyle]
+# 最大行长度
+max-line-length = 100
+# 忽略的错误
+ignore-overlong-task-comments = true
+
+# ========================================================================
+# 格式化配置
+# ========================================================================
+
+[format]
+# 使用与 Black 兼容的格式
+quote-style = "double"
+indent-style = "space"
+skip-magic-trailing-comma = false
+line-ending = "auto"
+
+# 文档字符串格式化
+docstring-code-format = true
+docstring-code-line-length = 80
