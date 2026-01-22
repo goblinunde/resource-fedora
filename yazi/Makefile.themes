@@ -21,17 +21,17 @@ COLOR_YELLOW := \033[1;33m
 
 theme-list:  ## 列出所有可用主题
 	@echo ""
-	@echo "$(COLOR_CYAN)═══════════════════════════════════════════════════════$(COLOR_RESET)"
-	@echo "$(COLOR_CYAN)          Yazi 可用主题列表$(COLOR_RESET)"
-	@echo "$(COLOR_CYAN)═══════════════════════════════════════════════════════$(COLOR_RESET)"
+	@echo "═══════════════════════════════════════════════════════"
+	@echo "          Yazi 可用主题列表"
+	@echo "═══════════════════════════════════════════════════════"
 	@echo ""
-	@echo "  1. $(COLOR_GREEN)Tokyo Night$(COLOR_RESET)        - 默认 Tokyo Night 主题"
-	@echo "  2. $(COLOR_GREEN)Tokyo Night Storm$(COLOR_RESET) - 更深背景的 Tokyo Night"
-	@echo "  3. $(COLOR_GREEN)Catppuccin Mocha$(COLOR_RESET)  - 温暖柔和的深色主题"
-	@echo "  4. $(COLOR_GREEN)Gruvbox Dark$(COLOR_RESET)      - 复古怀旧配色"
-	@echo "  5. $(COLOR_GREEN)Nord$(COLOR_RESET)              - 极地冷色调主题"
+	@echo "  1. Tokyo Night        - 默认 Tokyo Night 主题"
+	@echo "  2. Tokyo Night Storm - 更深背景的 Tokyo Night"
+	@echo "  3. Catppuccin Mocha  - 温暖柔和的深色主题"
+	@echo "  4. Gruvbox Dark      - 复古怀旧配色"
+	@echo "  5. Nord              - 极地冷色调主题"
 	@echo ""
-	@echo "$(COLOR_YELLOW)使用方法:$(COLOR_RESET)"
+	@echo "使用方法:"
 	@echo "  make theme-tokyo        # 应用 Tokyo Night 主题"
 	@echo "  make theme-storm        # 应用 Tokyo Night Storm 主题"
 	@echo "  make theme-catppuccin   # 应用 Catppuccin Mocha 主题"
@@ -40,46 +40,46 @@ theme-list:  ## 列出所有可用主题
 	@echo ""
 
 theme-tokyo:  ## 应用 Tokyo Night 主题
-	@echo "$(COLOR_CYAN)🎨 应用 Tokyo Night 主题...$(COLOR_RESET)"
+	@echo "🎨 应用 Tokyo Night 主题..."
 	@cp "$(PWD)/theme.toml" "$(CURRENT_THEME_FILE)"
-	@echo "$(COLOR_GREEN)✔ Tokyo Night 主题已应用$(COLOR_RESET)"
+	@echo "✔ Tokyo Night 主题已应用"
 	@echo "  请重启 Yazi 或按 R 刷新以查看效果"
 
 theme-storm:  ## 应用 Tokyo Night Storm 主题
-	@echo "$(COLOR_CYAN)🎨 应用 Tokyo Night Storm 主题...$(COLOR_RESET)"
+	@echo "🎨 应用 Tokyo Night Storm 主题..."
 	@cp "$(THEMES_DIR)/tokyo-night-storm.toml" "$(CURRENT_THEME_FILE)"
-	@echo "$(COLOR_GREEN)✔ Tokyo Night Storm 主题已应用$(COLOR_RESET)"
+	@echo "✔ Tokyo Night Storm 主题已应用"
 	@echo "  请重启 Yazi 或按 R 刷新以查看效果"
 
 theme-catppuccin:  ## 应用 Catppuccin Mocha 主题
-	@echo "$(COLOR_CYAN)🎨 应用 Catppuccin Mocha 主题...$(COLOR_RESET)"
+	@echo "🎨 应用 Catppuccin Mocha 主题..."
 	@cp "$(THEMES_DIR)/catppuccin-mocha.toml" "$(CURRENT_THEME_FILE)"
-	@echo "$(COLOR_GREEN)✔ Catppuccin Mocha 主题已应用$(COLOR_RESET)"
+	@echo "✔ Catppuccin Mocha 主题已应用"
 	@echo "  请重启 Yazi 或按 R 刷新以查看效果"
 
 theme-gruvbox:  ## 应用 Gruvbox Dark 主题
-	@echo "$(COLOR_CYAN)🎨 应用 Gruvbox Dark 主题...$(COLOR_RESET)"
+	@echo "🎨 应用 Gruvbox Dark 主题..."
 	@cp "$(THEMES_DIR)/gruvbox-dark.toml" "$(CURRENT_THEME_FILE)"
-	@echo "$(COLOR_GREEN)✔ Gruvbox Dark 主题已应用$(COLOR_RESET)"
+	@echo "✔ Gruvbox Dark 主题已应用"
 	@echo "  请重启 Yazi 或按 R 刷新以查看效果"
 
 theme-nord:  ## 应用 Nord 主题
-	@echo "$(COLOR_CYAN)🎨 应用 Nord 主题...$(COLOR_RESET)"
+	@echo "🎨 应用 Nord 主题..."
 	@cp "$(THEMES_DIR)/nord.toml" "$(CURRENT_THEME_FILE)"
-	@echo "$(COLOR_GREEN)✔ Nord 主题已应用$(COLOR_RESET)"
+	@echo "✔ Nord 主题已应用"
 	@echo "  请重启 Yazi 或按 R 刷新以查看效果"
 
 theme-current:  ## 显示当前使用的主题
-	@echo "$(COLOR_CYAN)当前主题:$(COLOR_RESET)"
+	@echo "当前主题:"
 	@grep 'use = ' "$(CURRENT_THEME_FILE)" 2>/dev/null || echo "  未找到主题配置"
 
 theme-backup:  ## 备份当前主题
-	@echo "$(COLOR_CYAN)💾 备份当前主题...$(COLOR_RESET)"
+	@echo "💾 备份当前主题..."
 	@cp "$(CURRENT_THEME_FILE)" "$(CURRENT_THEME_FILE).backup-$(shell date +%Y%m%d-%H%M%S)"
-	@echo "$(COLOR_GREEN)✔ 主题已备份$(COLOR_RESET)"
+	@echo "✔ 主题已备份"
 
 theme-restore:  ## 恢复备份的主题
-	@echo "$(COLOR_YELLOW)可用备份:$(COLOR_RESET)"
+	@echo "可用备份:"
 	@ls -1 "$(YAZI_CONFIG)"/theme.toml.backup-* 2>/dev/null || echo "  无可用备份"
 
 help:  ## 显示帮助信息
