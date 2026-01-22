@@ -235,10 +235,27 @@ bash setup.sh --help
 
 - **大小**: 15KB+
 - **特性**:
-  - 插件管理器集成
-  - 语法高亮和补全
-  - 自定义快捷键
-- **适用场景**: 服务器环境、轻量级编辑
+
+#### Vim 配置 (`.vimrc`)
+
+- **版本**: 4.0 (Cross-Platform)
+- **大小**: 16KB (480 行)
+- **主题**: Gruvbox 复古暖色调
+- **跨平台**: ✅ Windows, Linux, macOS
+- **特性**:
+  - **自动系统检测**: 根据 OS 配置路径和剪贴板
+  - **自动安装 vim-plug**: 首次运行自动安装
+  - **15+ 插件**:
+    - CoC.nvim (LSP 智能补全)
+    - NERDTree (文件树)
+    - FZF (模糊搜索)
+    - GitGutter (Git 状态)
+    - Airline (状态栏)
+  - **11 种文件模板**: Python, Rust, C/C++, CMake, LaTeX, Bash, Markdown, HTML, JSON, Makefile
+  - **LSP 支持**: Python (Pyright), Rust (rust-analyzer), C/C++ (clangd), LaTeX (texlab)
+  - **Git 集成**: Fugitive + GitGutter
+- **适用场景**: 多语言开发、跨平台使用
+- **📖 详细文档**: [Vim 配置完整指南](docs/VIM.md) (安装指南、快捷键、多系统流程、FAQ)
 
 #### Neovim (`nvim/`)
 

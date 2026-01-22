@@ -1,19 +1,40 @@
 " =============================================================================
-" Yyt's Ultimate Vim Configuration (Windows Optimized v3.0)
+" Yyt's Ultimate Vim Configuration (Cross-Platform v4.0)
 " =============================================================================
-" 作者: Yyt (基于 LazyVim 思路优化的 Classic Vim 配置)
-" 更新: 增加了 C/C++/CMake/Rust/Python/LaTeX 的全套支持
+" 作者: SMLYFM <yytcjx@gmail.com>
+" 更新: 跨平台适配 + 增强文件模板系统
+" 支持: Windows, Linux (Fedora/Ubuntu/Arch), macOS
 " =============================================================================
 
-" [Windows 适配] 设置 vimfiles 路径 (兼容 Linux 的 ~/.vim)
-let g:vim_home_path = '~/vimfiles'
+" [跨平台检测] 根据操作系统设置配置目录
+if has('win32') || has('win64')
+    let g:vim_home_path = '~/vimfiles'  " Windows
+    let g:os_type = 'windows'
+elseif has('unix')
+    if system('uname -s') =~ 'Darwin'
+        let g:vim_home_path = '~/.vim'  " macOS
+        let g:os_type = 'mac'
+    else
+        let g:vim_home_path = '~/.vim'  " Linux
+        let g:os_type = 'linux'
+    endif
+else
+    let g:vim_home_path = '~/.vim'      " 默认 Unix-like
+    let g:os_type = 'unix'
+endif
 
-" [自动安装] 如果没装 vim-plug，自动下载并安装
-" 注意: Windows 下使用 curl 下载，如果网络不通请参考手动安装教程
-if empty(glob(g:vim_home_path . '/autoload/plug.vim'))
-  silent execute '!curl -fLo ' . g:vim_home_path . '/autoload/plug.vim --create-dirs ' .
-    \ 'https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
-  autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
+" [自动安装 vim-plug] 跨平台安装插件管理器
+let s:plug_file = expand(g:vim_home_path . '/autoload/plug.vim')
+if empty(glob(s:plug_file))
+    " 根据系统选择下载工具
+    if g:os_type == 'windows'
+        silent execute '!curl -fLo ' . s:plug_file . ' --create-dirs ' .
+            \ 'https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
+    else
+        silent execute '!curl -fLo ' . s:plug_file . ' --create-dirs ' .
+            \ 'https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
+    endif
+    autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
 endif
 
 " =============================================================================
@@ -95,8 +116,13 @@ set smartcase               " 智能大小写 (如果输入了大写字母则开
 " --- 系统行为 ---
 set autoread                " 文件在外部被修改时自动重新加载
 set undofile                " 开启持久化撤销 (重启 Vim 后还能撤销)
-set clipboard=unnamed       " 使用系统剪贴板 (复制粘贴更方便)
-let mapleader = " "         " 设置空格键 <Space> 为 Leader 键
+" 跨平台剪贴板设置
+if g:os_type == 'linux' || g:os_type == 'mac'
+    set clipboard=unnamedplus   " Linux/macOS: 使用 + 寄存器
+else
+    set clipboard=unnamed       " Windows: 使用 * 寄存器
+endif
+let mapleader = " "             " 设置空格键 <Space> 为 Leader 键
 
 " [快捷键] 窗口切换 (Ctrl + h/j/k/l)
 nnoremap <C-h> <C-w>h
@@ -344,6 +370,101 @@ augroup MyFileTemplates
                 \ '__CURSOR__',
                 \ ]
     autocmd BufNewFile CMakeLists.txt call <SID>InsertTemplate()
+
+    " --- Bash 脚本模板 ---
+    autocmd BufNewFile *.sh let b:autocmd_template = [
+                \ '#!/usr/bin/env bash',
+                \ '# ============================================================================',
+                \ '# @author: __AUTHOR__',
+                \ '# @email:  __EMAIL__',
+                \ '# @created: __DATE__',
+                \ '# ============================================================================',
+                \ '',
+                \ 'set -euo pipefail  # 💡 严格模式：遇错即停 + 未定义变量报错',
+                \ '',
+                \ 'main() {',
+                \ '    echo "Hello, Bash!"',
+                \ '    __CURSOR__',
+                \ '}',
+                \ '',
+                \ 'main "$@"',
+                \ ]
+    autocmd BufNewFile *.sh call <SID>InsertTemplate()
+
+    " --- Markdown 文档模板 ---
+    autocmd BufNewFile *.md let b:autocmd_template = [
+                \ '# Title',
+                \ '',
+                \ '**Author**: __AUTHOR__  ',
+                \ '**Created**: __DATE__',
+                \ '',
+                \ '## 概述',
+                \ '',
+                \ '__CURSOR__',
+                \ '',
+                \ '## 安装',
+                \ '',
+                \ '```bash',
+                \ '# 安装命令',
+                \ '```',
+                \ '',
+                \ '## 使用',
+                \ '',
+                \ '## 参考资料',
+                \ ]
+    autocmd BufNewFile *.md call <SID>InsertTemplate()
+
+    " --- HTML 模板 ---
+    autocmd BufNewFile *.html let b:autocmd_template = [
+                \ '<!DOCTYPE html>',
+                \ '<html lang="zh-CN">',
+                \ '<head>',
+                \ '    <meta charset="UTF-8">',
+                \ '    <meta name="viewport" content="width=device-width, initial-scale=1.0">',
+                \ '    <meta name="author" content="__AUTHOR__">',
+                \ '    <title>Document</title>',
+                \ '</head>',
+                \ '<body>',
+                \ '    <h1>Hello, HTML!</h1>',
+                \ '    __CURSOR__',
+                \ '</body>',
+                \ '</html>',
+                \ ]
+    autocmd BufNewFile *.html call <SID>InsertTemplate()
+
+    " --- JSON 配置模板 ---
+    autocmd BufNewFile *.json let b:autocmd_template = [
+                \ '{',
+                \ '    "name": "project",',
+                \ '    "version": "0.1.0",',
+                \ '    "author": "__AUTHOR__",',
+                \ '    "__CURSOR__": "value"',
+                \ '}',
+                \ ]
+    autocmd BufNewFile *.json call <SID>InsertTemplate()
+
+    " --- Makefile 模板 ---
+    autocmd BufNewFile Makefile let b:autocmd_template = [
+                \ '# @author: __AUTHOR__',
+                \ '# @created: __DATE__',
+                \ '',
+                \ '.PHONY: all clean install test',
+                \ '',
+                \ 'all:',
+                \ '\t@echo "Building..."',
+                \ '\t__CURSOR__',
+                \ '',
+                \ 'clean:',
+                \ '\t@echo "Cleaning..."',
+                \ '\trm -rf build/',
+                \ '',
+                \ 'install:',
+                \ '\t@echo "Installing..."',
+                \ '',
+                \ 'test:',
+                \ '\t@echo "Testing..."',
+                \ ]
+    autocmd BufNewFile Makefile call <SID>InsertTemplate()
 augroup END
 
 
