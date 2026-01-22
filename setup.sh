@@ -47,6 +47,9 @@ declare -A CONFIG_FILES=(
     
     # Starship 主题
     ["tokyo-night.toml"]="${CONFIG_DIR}/starship.toml"
+    
+    # Yazi 文件管理器
+    ["yazi"]="${CONFIG_DIR}/yazi"
 )
 
 # ============================= 工具函数 =====================================
@@ -394,6 +397,37 @@ deploy_starship() {
     print_warning "2. Zsh 用户请使用 Oh-My-Zsh 框架，无需 Starship"
 }
 
+# 部署 Yazi 文件管理器配置
+deploy_yazi() {
+    print_header "📦 部署 Yazi 文件管理器配置"
+    print_info "用途: 快速现代化的终端文件管理器"
+    print_info "特性: Markdown/PDF/图片预览、Tokyo Night 主题、插件系统"
+    echo
+    
+    # 检查 Yazi 是否安装
+    if ! command -v yazi &>/dev/null; then
+        print_warning "Yazi 未安装,尝试自动安装..."
+        sudo dnf install -y yazi || {
+            print_error "Yazi 安装失败,请手动安装: sudo dnf install -y yazi"
+            return 1
+        }
+    fi
+    
+    deploy_config "yazi" "${CONFIG_FILES["yazi"]}"
+    
+    echo
+    print_success "Yazi 配置部署完成!"
+    print_info "使用方法: 执行 'yazi' 启动文件管理器"
+    print_info "详细文档: 查看 yazi/YAZI_CONFIG_GUIDE.md"
+    echo
+    print_info "安装插件:"
+    print_info "├─ piper.yazi: ya pkg add yazi-rs/plugins:piper"
+    print_info "└─ mux.yazi: ya pkg add peterfication/mux"
+    echo
+    print_info "依赖工具推荐:"
+    print_info "sudo dnf install bat glow poppler-utils hexyl mediainfo perl-Image-ExifTool"
+}
+
 # 部署 Ruff 配置 (Python Linter/Formatter)
 deploy_ruff() {
     print_header "📦 部署 Ruff Python 工具配置"
@@ -551,12 +585,13 @@ interactive_mode() {
         echo -e "  ${COLOR_GREEN}8)${COLOR_RESET} Git 配置"
         echo -e "  ${COLOR_GREEN}9)${COLOR_RESET} Starship 主题 (Bash/Fish/Nushell)"
         echo -e "  ${COLOR_GREEN}r)${COLOR_RESET} Ruff (Python Linter)"
+        echo -e "  ${COLOR_GREEN}y)${COLOR_RESET} Yazi 文件管理器"
         echo -e "  ${COLOR_GREEN}c)${COLOR_RESET} Conda/Mamba 引导"
         echo -e "  ${COLOR_BLUE}a)${COLOR_RESET} 全部部署"
         echo -e "  ${COLOR_RED}q)${COLOR_RESET} 退出"
         echo
         
-        read -p "$(echo -e "${COLOR_CYAN}请输入选项 [1-9/r/c/a/q]: ${COLOR_RESET}")" -n 1 -r choice
+        read -p "$(echo -e "${COLOR_CYAN}请输入选项 [1-9/y/r/c/a/q]: ${COLOR_RESET}")" -n 1 -r choice
         echo
         
         case "$choice" in
@@ -569,6 +604,7 @@ interactive_mode() {
             7) deploy_tmux ;;
             8) deploy_git ;;
             9) deploy_starship ;;
+            y|Y) deploy_yazi ;;
             r|R) deploy_ruff ;;
             c|C) deploy_conda_tools ;;
             a|A) deploy_all; break ;;
@@ -588,6 +624,7 @@ deploy_all() {
     print_info "├─ Shell: Bash, Zsh (Oh-My-Zsh), Fish, Nushell"
     print_info "├─ 编辑器: Vim, Neovim (LazyVim)"
     print_info "├─ 终端: Tmux"
+     print_info "├─ 文件管理器: Yazi"
     print_info "├─ 开发工具: Git, Conda, Ruff"
     print_info "└─ 主题: Starship (Tokyo Night)"
     echo
@@ -608,6 +645,7 @@ deploy_all() {
     deploy_vim
     deploy_nvim
     deploy_tmux
+     deploy_yazi
     deploy_git
     deploy_starship
     deploy_ruff
@@ -693,6 +731,7 @@ EOF
                 ;;
             --tmux)
                 deploy_tmux
+     deploy_yazi
                 shift
                 ;;
             --git)

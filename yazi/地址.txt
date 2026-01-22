@@ -1,0 +1,3 @@
+https://github.com/sxyazi/yazi/
+
+https://github.com/sxyazi/yazi/tree/shipped/yazi-config/preset

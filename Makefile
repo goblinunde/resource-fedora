@@ -35,6 +35,7 @@ help:  ## 显示此帮助信息
 	@printf "  %-20s %s\n" "deploy-vim" "部署 Vim 配置"
 	@printf "  %-20s %s\n" "deploy-nvim" "部署 Neovim 配置"
 	@printf "  %-20s %s\n" "deploy-tmux" "部署 Tmux 配置"
+	@printf "  %-20s %s\n" "deploy-yazi" "部署 Yazi 文件管理器"
 	@printf "  %-20s %s\n" "deploy-git" "部署 Git 配置"
 	@printf "  %-20s %s\n" "deploy-starship" "部署 Starship 主题"
 	@echo "---------------------------------------------------------------------------"
@@ -109,6 +110,14 @@ deploy-git: ## 部署 Git 配置
 	@echo "$(COLOR_CYAN)📦 部署 Git 配置...$(COLOR_RESET)"
 	@bash $(SETUP_SCRIPT) --git
 
+deploy-yazi: ## 部署 Yazi 文件管理器
+	@echo "$(COLOR_CYAN)📦 部署 Yazi 文件管理器...$(COLOR_RESET)"
+	@if [ -d "yazi" ]; then \
+		bash yazi/install_yazi_config.sh; \
+	else \
+		echo "$(COLOR_RED)错误: yazi 配置目录不存在$(COLOR_RESET)"; \
+	fi
+
 deploy-starship: ## 部署 Starship 主题
 	@echo "$(COLOR_CYAN)📦 部署 Starship 主题...$(COLOR_RESET)"
 	@bash $(SETUP_SCRIPT) --starship
@@ -169,6 +178,7 @@ check: ## 检查配置文件完整性
 	@echo ""
 	@echo "$(COLOR_BOLD)其他配置:$(COLOR_RESET)"
 	@[ -f ".tmux.conf" ] && echo "  ✓ .tmux.conf" || echo "  ✗ .tmux.conf $(COLOR_RED)(缺失)$(COLOR_RESET)"
+	@[ -d "yazi" ] && echo "  ✓ yazi/" || echo "  ✗ yazi/ $(COLOR_RED)(缺失)$(COLOR_RESET)"
 	@[ -f ".gitconfig" ] && echo "  ✓ .gitconfig" || echo "  ✗ .gitconfig $(COLOR_RED)(缺失)$(COLOR_RESET)"
 	@[ -f "tokyo-night.toml" ] && echo "  ✓ tokyo-night.toml" || echo "  ✗ tokyo-night.toml $(COLOR_RED)(缺失)$(COLOR_RESET)"
 	@echo ""

@@ -1,0 +1,224 @@
+# Yazi 主题配置文件 - Tokyo Night
+# 此配置基于 Tokyo Night 配色方案
+# 配置文档: https://yazi-rs.github.io/docs/configuration/theme
+
+"$schema" = "https://yazi-rs.github.io/schemas/theme.json"
+
+# ===== Tokyo Night 调色板 =====
+# 💡 Tokyo Night 主色调
+# - 背景色: #1a1b26 (深蓝黑)
+# - 前景色: #c0caf5 (浅蓝白)
+# - 蓝色: #7aa2f7
+# - 青色: #7dcfff  
+# - 绿色: #9ece6a
+# - 黄色: #e0af68
+# - 橙色: #ff9e64
+# - 红色: #f7768e
+# - 紫色: #bb9af7
+# - 粉色: #f7768e
+
+[flavor]
+use = "tokyo-night"
+
+# ===== 管理器界面 [manager] =====
+[manager]
+# 💡 当前工作目录边框颜色
+cwd = { fg = "#7aa2f7", bold = true }
+
+# 💡 高亮文件 (光标所在文件)
+hovered = { reversed = true }
+preview_hovered = { underline = true }
+
+# 💡 查找匹配项
+find_keyword = { fg = "#e0af68", bold = true, italic = true, underline = true }
+find_position = { fg = "#bb9af7", bg = "reset", bold = true, italic = true }
+
+# 💡 标记的文件 (yanked/cut)
+marker_copied = { fg = "#9ece6a", bg = "#9ece6a" }
+marker_cut = { fg = "#f7768e", bg = "#f7768e" }
+marker_marked = { fg = "#7dcfff", bg = "#7dcfff" }
+marker_selected = { fg = "#e0af68", bg = "#e0af68" }
+
+# 💡 标签页
+tab_active = { fg = "#1a1b26", bg = "#7aa2f7", bold = true }
+tab_inactive = { fg = "#565f89", bg = "#24283b" }
+tab_width = 1
+
+# 💡 边框样式
+border_symbol = "│"
+border_style = { fg = "#3b4261" }
+
+# 💡 语法高亮 (代码预览)
+[manager.syntect_theme]
+light = ""
+dark = "base16-ocean.dark"
+
+# ===== 状态栏 [status] =====
+[status]
+separator_open = ""
+separator_close = ""
+separator_style = { fg = "#3b4261", bg = "#3b4261" }
+
+# 💡 模式指示器
+mode_normal = { fg = "#1a1b26", bg = "#7aa2f7", bold = true }
+mode_select = { fg = "#1a1b26", bg = "#9ece6a", bold = true }
+mode_unset = { fg = "#1a1b26", bg = "#f7768e", bold = true }
+
+# 💡 进度条
+progress_label = { fg = "#c0caf5", bold = true }
+progress_normal = { fg = "#7aa2f7", bg = "#3b4261" }
+progress_error = { fg = "#f7768e", bg = "#3b4261" }
+
+# 💡 权限显示
+permissions_t = { fg = "#9ece6a" }
+permissions_r = { fg = "#e0af68" }
+permissions_w = { fg = "#f7768e" }
+permissions_x = { fg = "#7dcfff" }
+permissions_s = { fg = "#bb9af7" }
+
+# ===== 输入框 [input] =====
+[input]
+border = { fg = "#7aa2f7" }
+title = { fg = "#c0caf5" }
+value = { fg = "#e0af68" }
+selected = { reversed = true }
+
+# ===== 选择器 [pick] =====
+[pick]
+border = { fg = "#7aa2f7" }
+active = { fg = "#bb9af7", bold = true }
+inactive = { fg = "#565f89" }
+
+# ===== 确认对话框 [confirm] =====
+[confirm]
+border = { fg = "#f7768e" }
+title = { fg = "#c0caf5" }
+content = { fg = "#c0caf5" }
+
+# ===== 任务管理器 [tasks] =====
+[tasks]
+border = { fg = "#7aa2f7" }
+title = { fg = "#c0caf5" }
+hovered = { fg = "#bb9af7", underline = true }
+
+# ===== 帮助界面 [help] =====
+[help]
+on = { fg = "#bb9af7" }
+run = { fg = "#7dcfff" }
+desc = { fg = "#9ece6a" }
+hovered = { reversed = true, bold = true }
+footer = { fg = "#565f89", bg = "#1a1b26" }
+
+# ===== 文件类型图标和颜色 [filetype] =====
+[filetype]
+
+rules = [
+	# 💡 编程语言
+	{ mime = "text/*", fg = "#c0caf5" },
+	{ name = "*.rs", fg = "#ff9e64", bold = true },          # Rust
+	{ name = "*.py", fg = "#e0af68", bold = true },           # Python
+	{ name = "*.{js,ts,jsx,tsx}", fg = "#e0af68" },          # JavaScript/TypeScript
+	{ name = "*.{c,cpp,cc,cxx,h,hpp}", fg = "#7aa2f7" },     # C/C++
+	{ name = "*.go", fg = "#7dcfff" },                       # Go
+	{ name = "*.{sh,bash,zsh,fish}", fg = "#9ece6a" },       # Shell
+	{ name = "*.lua", fg = "#7aa2f7" },                      # Lua
+	{ name = "*.{tex,latex}", fg = "#9ece6a" },             # LaTeX
+	
+	# 💡 配置文件
+	{ name = "*.{toml,yaml,yml,json}", fg = "#bb9af7" },
+	{ name = "*.{conf,config,cfg,ini}", fg = "#565f89" },
+	{ name = "Makefile", fg = "#f7768e", bold = true },
+	{ name = "Dockerfile", fg = "#7dcfff", bold = true },
+	
+	# 💡 文档
+	{ name = "*.md", fg = "#7aa2f7", bold = true },          # Markdown
+	{ name = "*.{pdf,epub}", fg = "#f7768e" },               # PDF/EPUB
+	{ name = "*.{doc,docx,odt}", fg = "#7aa2f7" },          # Word
+	{ name = "*.{xls,xlsx,ods}", fg = "#9ece6a" },          # Excel
+	{ name = "*.{ppt,pptx,odp}", fg = "#ff9e64" },          # PowerPoint
+	
+	# 💡 多媒体
+	{ mime = "image/*", fg = "#bb9af7" },
+	{ name = "*.{jpg,jpeg,png,gif,bmp,ico,webp}", fg = "#bb9af7" },
+	{ mime = "video/*", fg = "#e0af68" },
+	{ name = "*.{mp4,mkv,avi,mov,wmv,flv}", fg = "#e0af68" },
+	{ mime = "audio/*", fg = "#7dcfff" },
+	{ name = "*.{mp3,wav,flac,ogg,m4a,aac}", fg = "#7dcfff" },
+	
+	# 💡 压缩包
+	{ mime = "application/{zip,rar,7z*,tar,gzip,xz}", fg = "#f7768e" },
+	{ name = "*.{zip,rar,7z,tar,gz,xz,bz2,tgz}", fg = "#f7768e" },
+	
+	# 💡 Git 相关
+	{ name = ".git*", fg = "#ff9e64" },
+	{ name = ".gitignore", fg = "#565f89" },
+	{ name = ".gitattributes", fg = "#565f89" },
+	
+	# 💡 特殊文件
+	{ name = "README*", fg = "#e0af68", bold = true },
+	{ name = "LICENSE", fg = "#f7768e", bold = true },
+	{ name = "*.{log,lock}", fg = "#565f89" },
+]
+
+# ===== 文件图标 [icon] =====
+[icon]
+
+dirs = [
+	{ name = ".config", text = "" },
+	{ name = ".git", text = "" },
+	{ name = "Desktop", text = "" },
+	{ name = "Documents", text = "" },
+	{ name = "Downloads", text = "" },
+	{ name = "Pictures", text = "" },
+	{ name = "Music", text = "" },
+	{ name = "Videos", text = "" },
+	{ name = "Github", text = "" },
+]
+
+files = [
+	# 💡 编程语言
+	{ name = "*.rs", text = "" },        # Rust
+	{ name = "*.py", text = "" },        # Python
+	{ name = "*.js", text = "" },        # JavaScript
+	{ name = "*.ts", text = "" },        # TypeScript
+	{ name = "*.jsx", text = "" },       # React
+	{ name = "*.tsx", text = "" },       # React TypeScript
+	{ name = "*.c", text = "" },         # C
+	{ name = "*.cpp", text = "" },       # C++
+	{ name = "*.h", text = "" },         # Header
+	{ name = "*.go", text = "" },        # Go
+	{ name = "*.sh", text = "" },        # Shell
+	{ name = "*.lua", text = "" },       # Lua
+	{ name = "*.tex", text = "" },       # LaTeX
+	
+	# 💡 配置文件
+	{ name = "*.toml", text = "" },
+	{ name = "*.yaml", text = "" },
+	{ name = "*.yml", text = "" },
+	{ name = "*.json", text = "" },
+	{ name = "Makefile", text = "" },
+	{ name = "Dockerfile", text = "" },
+	
+	# 💡 文档
+	{ name = "*.md", text = "" },        # Markdown
+	{ name = "*.pdf", text = "" },       # PDF
+	{ name = "*.txt", text = "" },       # Text
+	
+	# 💡 多媒体
+	{ name = "*.{jpg,jpeg,png,gif,bmp,ico,webp}", text = "" },
+	{ name = "*.{mp4,mkv,avi,mov}", text = "" },
+	{ name = "*.{mp3,wav,flac,ogg}", text = "" },
+	
+	# 💡 压缩包
+	{ name = "*.{zip,rar,7z,tar,gz}", text = "" },
+	
+	# 💡 特殊文件
+	{ name = "README*", text = "" },
+	{ name = "LICENSE", text = "" },
+	{ name = ".gitignore", text = "" },
+]
+
+# 💡 默认图标
+cwd = ""
+file = ""
+folder = ""

@@ -1,0 +1,381 @@
+# Yazi 文件管理器配置文件
+# 配置文档: https://yazi-rs.github.io/docs/configuration/yazi
+# Schema 验证: https://yazi-rs.github.io/schemas/yazi.json
+
+"$schema" = "https://yazi-rs.github.io/schemas/yazi.json"
+
+# ===== 文件管理器设置 [mgr] =====
+[mgr]
+# 💡 窗口布局比例 [父目录:当前目录:预览窗口]
+ratio = [1, 4, 3]
+
+# 💡 文件排序方式
+# 可选值: "alphabetical" | "created" | "modified" | "natural" | "size" | "extension"
+sort_by = "alphabetical"
+
+# 💡 排序是否区分大小写
+sort_sensitive = false
+
+# 💡 是否反向排序
+sort_reverse = false
+
+# 💡 目录是否优先显示
+sort_dir_first = true
+
+# 💡 是否使用音译排序(对非拉丁字符友好)
+sort_translit = false
+
+# 💡 行模式显示 - 显示文件元信息的方式
+# 可选值: "none" | "size" | "permissions" | "mtime"
+linemode = "none"
+
+# 💡 是否显示隐藏文件(以 . 开头的文件)
+show_hidden = false
+
+# 💡 是否显示符号链接的目标
+show_symlink = true
+
+# 💡 滚动偏移量 - 光标距离窗口边缘的最小行数
+scrolloff = 5
+
+# 💡 鼠标事件支持
+mouse_events = ["click", "scroll"]
+
+# 💡 窗口标题格式 ({cwd} 表示当前工作目录)
+title_format = "Yazi: {cwd}"
+
+# ===== 预览窗口设置 [preview] =====
+[preview]
+# 💡 文本换行方式
+# 可选值: "no" | "wrap"
+wrap = "no"
+
+# 💡 Tab 缩进大小
+tab_size = 2
+
+# 💡 预览窗口最大宽度(像素)
+max_width = 600
+
+# 💡 预览窗口最大高度(像素)
+max_height = 900
+
+# 💡 预览缓存目录(留空使用系统默认)
+cache_dir = ""
+
+# 💡 图片预览延迟(毫秒) - 防止快速浏览时频繁加载图片
+image_delay = 30
+
+# 💡 图片缩放滤镜算法
+# 可选值: "nearest" | "triangle" | "catmull-rom" | "gaussian" | "lanczos3"
+image_filter = "triangle"
+
+# 💡 图片质量(1-100)
+image_quality = 75
+
+# 💡 ueberzug 缩放比例(适用于 Kitty/iTerm2 协议)
+ueberzug_scale = 1
+
+# 💡 ueberzug 偏移量 [x, y, width, height]
+ueberzug_offset = [0, 0, 0, 0]
+
+# ===== 文件打开器配置 [opener] =====
+[opener]
+# 💡 文本编辑器
+edit = [
+	{ run = '${EDITOR:-nvim} "$@"', desc = "$EDITOR", for = "unix", block = true },
+]
+
+# 💡 媒体播放器
+play = [
+	{ run = 'mpv "$@"', desc = "播放 (mpv)", for = "linux", orphan = true },
+	{ run = 'mediainfo "$1"; echo "按 Enter 退出"; read _', block = true, desc = "显示媒体信息", for = "unix" },
+]
+
+# 💡 系统默认打开器
+open = [
+	{ run = 'xdg-open "$@"', desc = "用系统默认程序打开", for = "linux" },
+]
+
+# 💡 在文件管理器中显示
+reveal = [
+	{ run = 'xdg-open "$(dirname "$1")"', desc = "在文件管理器中显示", for = "linux" },
+	{ run = 'exiftool "$1"; echo "按 Enter 退出"; read _', desc = "显示 EXIF 信息", for = "unix", block = true },
+]
+
+# 💡 解压缩
+extract = [
+	{ run = 'ya pub extract --list "$@"', desc = "解压到当前目录" },
+]
+
+# 💡 下载文件
+download = [
+	{ run = 'ya emit download --open -- "$@"', desc = "下载并打开" },
+	{ run = 'ya emit download -- "$@"', desc = "下载" },
+]
+
+# ===== 文件打开规则 [open] =====
+[open]
+rules = [
+	# 文件夹
+	{ url = "*/", use = ["edit", "open", "reveal"] },
+	
+	# 文本文件
+	{ mime = "text/*", use = ["edit", "reveal"] },
+	
+	# 图片文件
+	{ mime = "image/*", use = ["open", "reveal"] },
+	
+	# 音视频文件
+	{ mime = "{audio,video}/*", use = ["play", "reveal"] },
+	
+	# 压缩包
+	{ mime = "application/{zip,rar,7z*,tar,gzip,xz,zstd,bzip*,lzma,compress,archive,cpio,arj,xar,ms-cab*}", use = ["extract", "reveal"] },
+	
+	# JSON 文件
+	{ mime = "application/{json,ndjson}", use = ["edit", "reveal"] },
+	{ mime = "*/javascript", use = ["edit", "reveal"] },
+	
+	# 空文件
+	{ mime = "inode/empty", use = ["edit", "reveal"] },
+	
+	# 虚拟文件系统
+	{ mime = "vfs/{absent,stale}", use = "download" },
+	
+	# 默认规则
+	{ url = "*", use = ["open", "reveal"] },
+]
+
+# ===== 任务管理设置 [tasks] =====
+[tasks]
+# 💡 微任务工作线程数
+micro_workers = 10
+
+# 💡 宏任务工作线程数
+macro_workers = 10
+
+# 💡 异常任务重试次数
+bizarre_retry = 3
+
+# 💡 图片预加载内存分配 (512MB)
+image_alloc = 536870912
+
+# 💡 图片边界 [最大宽度, 最大高度]
+image_bound = [10000, 10000]
+
+# 💡 是否禁止预加载
+suppress_preload = false
+
+# ===== 插件系统配置 [plugin] =====
+[plugin]
+
+# ----- MIME 类型获取器 -----
+fetchers = [
+	# 💡 基于文件扩展名的 MIME 类型识别(比 file 命令更快但精度较低)
+	{ id = "mime", url = "*/", run = "mime.dir", prio = "high" },
+	{ id = "mime", url = "local://*", run = "mime.local", prio = "high" },
+	{ id = "mime", url = "remote://*", run = "mime.remote", prio = "high" },
+]
+
+# ----- 文件检测器 (Spotters) -----
+spotters = [
+	{ url = "*/", run = "folder" },
+	
+	# 代码文件
+	{ mime = "text/*", run = "code" },
+	{ mime = "application/{mbox,javascript,wine-extension-ini}", run = "code" },
+	
+	# 图片文件
+	{ mime = "image/{avif,hei?,jxl}", run = "magick" },
+	{ mime = "image/svg+xml", run = "svg" },
+	{ mime = "image/*", run = "image" },
+	
+	# 视频文件
+	{ mime = "video/*", run = "video" },
+	
+	# 虚拟文件系统
+	{ mime = "vfs/*", run = "vfs" },
+	
+	# 错误处理
+	{ mime = "null/*", run = "null" },
+	
+	# 默认
+	{ url = "*", run = "file" },
+]
+
+# ----- 预加载器 (Preloaders) - 在浏览时提前加载 -----
+preloaders = [
+	# 图片预加载
+	{ mime = "image/{avif,hei?,jxl}", run = "magick" },
+	{ mime = "image/svg+xml", run = "svg" },
+	{ mime = "image/*", run = "image" },
+	
+	# 视频预加载
+	{ mime = "video/*", run = "video" },
+	
+	# PDF 预加载
+	{ mime = "application/pdf", run = "pdf" },
+	
+	# 字体预加载
+	{ mime = "font/*", run = "font" },
+	{ mime = "application/ms-opentype", run = "font" },
+]
+
+# ----- 预览器配置 (Previewers) - 使用 piper.yazi 增强预览 -----
+# 💡 prepend_previewers: 优先级最高,会覆盖默认预览器
+[[plugin.prepend_previewers]]
+# Markdown 预览 - 使用 glow 渲染
+url = "*.md"
+run = 'piper -- CLICOLOR_FORCE=1 glow -w=$w -s=dark "$1"'
+
+[[plugin.prepend_previewers]]
+# CSV 预览 - 使用 bat 语法高亮
+url = "*.csv"
+run = 'piper -- bat -p --color=always "$1"'
+
+[[plugin.prepend_previewers]]
+# Tarball 预览 - 显示压缩包内容
+url = "*.tar*"
+run = 'piper --format=url -- tar tf "$1"'
+
+[[plugin.prepend_previewers]]
+# 目录树预览 - 使用 eza 显示目录结构
+url = "*/"
+run = 'piper -- eza -TL=3 --color=always --icons=always --group-directories-first --no-quotes "$1"'
+
+[[plugin.prepend_previewers]]
+# SQLite 数据库预览 - 显示数据库结构
+mime = "application/sqlite3"
+run = 'piper -- sqlite3 "$1" ".schema --indent"'
+
+# 💡 默认预览器配置
+previewers = [
+	{ url = "*/", run = "folder" },
+	
+	# 代码预览
+	{ mime = "text/*", run = "code" },
+	{ mime = "application/{mbox,javascript,wine-extension-ini}", run = "code" },
+	
+	# JSON 预览
+	{ mime = "application/{json,ndjson}", run = "json" },
+	
+	# 图片预览
+	{ mime = "image/{avif,hei?,jxl}", run = "magick" },
+	{ mime = "image/svg+xml", run = "svg" },
+	{ mime = "image/*", run = "image" },
+	
+	# 视频预览
+	{ mime = "video/*", run = "video" },
+	
+	# PDF 预览
+	{ mime = "application/pdf", run = "pdf" },
+	
+	# 压缩包预览
+	{ mime = "application/{zip,rar,7z*,tar,gzip,xz,zstd,bzip*,lzma,compress,archive,cpio,arj,xar,ms-cab*}", run = "archive" },
+	{ mime = "application/{debian*-package,redhat-package-manager,rpm,android.package-archive}", run = "archive" },
+	{ url = "*.{AppImage,appimage}", run = "archive" },
+	
+	# 虚拟磁盘/光盘镜像
+	{ mime = "application/{iso9660-image,qemu-disk,ms-wim,apple-diskimage}", run = "archive" },
+	{ mime = "application/virtualbox-{vhd,vhdx}", run = "archive" },
+	{ url = "*.{img,fat,ext,ext2,ext3,ext4,squashfs,ntfs,hfs,hfsx}", run = "archive" },
+	
+	# 字体预览
+	{ mime = "font/*", run = "font" },
+	{ mime = "application/ms-opentype", run = "font" },
+	
+	# 空文件
+	{ mime = "inode/empty", run = "empty" },
+	
+	# 虚拟文件系统
+	{ mime = "vfs/*", run = "vfs" },
+	
+	# 错误处理
+	{ mime = "null/*", run = "null" },
+	
+	# 默认预览器
+	{ url = "*", run = "file" },
+]
+
+# 💡 append_previewers: 作为后备预览器,当没有匹配的预览器时使用
+[[plugin.append_previewers]]
+# 使用 hexyl 作为后备预览器(十六进制查看器)
+url = "*"
+run = 'piper -- hexyl --border=none --terminal-width=$w "$1"'
+
+# ===== 输入框配置 [input] =====
+[input]
+# 💡 光标闪烁
+cursor_blink = false
+
+# ----- cd (切换目录) -----
+cd_title = "切换目录:"
+cd_origin = "top-center"
+cd_offset = [0, 2, 50, 3]
+
+# ----- create (创建文件/目录) -----
+create_title = ["创建:", "创建目录:"]
+create_origin = "top-center"
+create_offset = [0, 2, 50, 3]
+
+# ----- rename (重命名) -----
+rename_title = "重命名:"
+rename_origin = "hovered"
+rename_offset = [0, 1, 50, 3]
+
+# ----- filter (过滤) -----
+filter_title = "过滤:"
+filter_origin = "top-center"
+filter_offset = [0, 2, 50, 3]
+
+# ----- find (查找) -----
+find_title = ["查找下一个:", "查找上一个:"]
+find_origin = "top-center"
+find_offset = [0, 2, 50, 3]
+
+# ----- search (搜索) -----
+search_title = "通过 {n} 搜索:"
+search_origin = "top-center"
+search_offset = [0, 2, 50, 3]
+
+# ----- shell (执行命令) -----
+shell_title = ["Shell:", "Shell (阻塞):"]
+shell_origin = "top-center"
+shell_offset = [0, 2, 50, 3]
+
+# ===== 确认对话框配置 [confirm] =====
+[confirm]
+# ----- trash (移至回收站) -----
+trash_title = "将 {n} 个选中的文件移至回收站?"
+trash_origin = "center"
+trash_offset = [0, 0, 70, 20]
+
+# ----- delete (永久删除) -----
+delete_title = "永久删除 {n} 个选中的文件?"
+delete_origin = "center"
+delete_offset = [0, 0, 70, 20]
+
+# ----- overwrite (覆盖文件) -----
+overwrite_title = "覆盖文件?"
+overwrite_body = "将覆盖以下文件:"
+overwrite_origin = "center"
+overwrite_offset = [0, 0, 50, 15]
+
+# ----- quit (退出) -----
+quit_title = "退出?"
+quit_body = "有未完成的任务,仍要退出吗?\n(使用默认快捷键 'w' 打开任务管理器)"
+quit_origin = "center"
+quit_offset = [0, 0, 50, 15]
+
+# ===== 选择器配置 [pick] =====
+[pick]
+open_title = "打开方式:"
+open_origin = "hovered"
+open_offset = [0, 1, 50, 7]
+
+# ===== Which-key 配置 [which] =====
+[which]
+# 💡 快捷键提示排序方式
+sort_by = "none"
+sort_sensitive = false
+sort_reverse = false
+sort_translit = false
