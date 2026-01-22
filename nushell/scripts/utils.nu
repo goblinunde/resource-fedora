@@ -33,7 +33,7 @@ export def sysinfo [] {
     # Disk Information
     print ""
     print $"(ansi yellow_bold)Disk Usage:(ansi reset)"
-    df -h | from ssv | where Filesystem =~ '^/' | select Filesystem Size Used Avail 'Use%' Mounted
+    sys | get disks | select device filesystem mount usage | where usage > 0
 }
 
 # List all listening ports
@@ -66,7 +66,7 @@ export def backup [file: path] {
 
 # Calculate total size of a directory
 export def sizeof [dir: path] {
-    du -sh $dir | from ssv -n | get column1 | get 0
+    du --max-depth 0 $dir | get 0 | get physical
 }
 
 # Smart extract - automatically detect archive type and extract
@@ -282,5 +282,5 @@ export def sys-clean [] {
 
 # Show disk usage of current directory
 export def disk-usage [] {
-    du -sh * | from ssv -n | sort-by column2 -r | rename size path
+    du | where type == dir | select name physical | sort-by physical -r
 }
