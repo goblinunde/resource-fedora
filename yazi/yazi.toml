@@ -271,21 +271,21 @@ run = '''piper -- sh -c 'pdftoppm -f 1 -l 1 -scale-to-x 1920 -scale-to-y -1 -sin
 # 💡 依赖: rich-cli (uv tool install rich-cli)
 # 💡 功能: 更强大的 Markdown 渲染，支持更多样式
 url = "*.md"
-run = 'piper -- sh -c ''if command -v rich &>/dev/null; then rich --force-terminal --width=$w "$1"; else glow -w $w -s dark --style=dark --width=$w "$1"; fi'''
+run = '''piper -- sh -c 'if command -v rich &>/dev/null; then rich --force-terminal --width=$w "$1"; else glow -w $w -s dark --style=dark --width=$w "$1"; fi' '''
 
 [[plugin.prepend_previewers]]
 # JSON 美化预览 - 使用 rich-cli
 # 💡 依赖: rich-cli
 # 💡 功能: 语法高亮 + 格式化 JSON
 mime = "application/{json,ndjson}"
-run = 'piper -- sh -c ''if command -v rich &>/dev/null; then rich --json --force-terminal --width=$w "$1"; else bat -p --color=always "$1"; fi'''
+run = '''piper -- sh -c 'if command -v rich &>/dev/null; then rich --json --force-terminal --width=$w "$1"; else bat -p --color=always "$1"; fi' '''
 
 [[plugin.prepend_previewers]]
 # CSV 美化预览 - 使用 rich-cli (备选: bat)
 # 💡 依赖: rich-cli
 # 💡 功能: 表格形式显示 CSV，比 bat 更美观
 url = "*.csv"
-run = 'piper -- sh -c ''if command -v rich &>/dev/null; then rich --csv --force-terminal --width=$w "$1"; else bat -p --color=always --style=numbers,grid "$1"; fi'''
+run = '''piper -- sh -c 'if command -v rich &>/dev/null; then rich --csv --force-terminal --width=$w "$1"; else bat -p --color=always --style=numbers,grid "$1"; fi' '''
 
 # [[plugin.prepend_previewers]]
 # # Jupyter Notebook 预览
@@ -300,35 +300,35 @@ run = 'piper -- sh -c ''if command -v rich &>/dev/null; then rich --csv --force-
 # 💡 依赖: duckdb
 # 💡 功能: 显示 Parquet 文件前 100 行 + 数据类型
 url = "*.parquet"
-run = 'piper -- sh -c ''if command -v duckdb &>/dev/null; then duckdb -c "SELECT * FROM read_parquet(\"$1\") LIMIT 100;"; else echo "安装 duckdb: sudo dnf install duckdb"; fi'''
+run = '''piper -- sh -c 'if command -v duckdb &>/dev/null; then duckdb -c "SELECT * FROM read_parquet(\"$1\") LIMIT 100;"; else echo "安装 duckdb: sudo dnf install duckdb"; fi' '''
 
 [[plugin.prepend_previewers]]
 # TSV 文件预览 - 使用 duckdb
 # 💡 依赖: duckdb
 # 💡 功能: Tab 分隔值文件预览
 url = "*.tsv"
-run = 'piper -- sh -c ''if command -v duckdb &>/dev/null; then duckdb -c "SELECT * FROM read_csv_auto(\"$1\", delim=\"\\t\") LIMIT 100;"; else cat "$1" | head -100; fi'''
+run = '''piper -- sh -c 'if command -v duckdb &>/dev/null; then duckdb -c "SELECT * FROM read_csv_auto(\"$1\", delim=\"\\t\") LIMIT 100;"; else cat "$1" | head -100; fi' '''
 
 [[plugin.prepend_previewers]]
 # 音频元数据和封面预览 - 使用 exiftool
 # 💡 依赖: exiftool
 # 💡 功能: 显示音频文件的详细元数据（艺术家、专辑、比特率等）
 mime = "audio/*"
-run = 'piper -- sh -c ''if command -v exiftool &>/dev/null; then exiftool "$1"; else mediainfo "$1" 2>/dev/null || echo "安装 exiftool: sudo dnf install exiftool"; fi'''
+run = '''piper -- sh -c 'if command -v exiftool &>/dev/null; then exiftool "$1"; else mediainfo "$1" 2>/dev/null || echo "安装 exiftool: sudo dnf install exiftool"; fi' '''
 
 [[plugin.prepend_previewers]]
 # 视频媒体信息预览 - 使用 mediainfo
 # 💡 依赖: mediainfo, ffmpeg
 # 💡 功能: 详细的视频/音频编解码器、分辨率、帧率等信息
 mime = "video/*"
-run = 'piper -- sh -c ''if command -v mediainfo &>/dev/null; then mediainfo "$1"; else ffmpeg -i "$1" 2>&1 | grep -E "Duration|Stream"; fi'''
+run = '''piper -- sh -c 'if command -v mediainfo &>/dev/null; then mediainfo "$1"; else ffmpeg -i "$1" 2>&1 | grep -E "Duration|Stream"; fi' '''
 
 [[plugin.prepend_previewers]]
 # 字幕文件预览 - 使用 mediainfo
 # 💡 依赖: mediainfo
 # 💡 功能: 显示字幕文件信息和内容预览
 url = "*.{srt,ass,ssa,sub,vtt}"
-run = 'piper -- sh -c ''if command -v mediainfo &>/dev/null; then echo "=== 字幕信息 ==="; mediainfo "$1"; echo ""; echo "=== 内容预览 ==="; head -50 "$1"; else cat "$1" | head -50; fi'''
+run = '''piper -- sh -c 'if command -v mediainfo &>/dev/null; then echo "=== 字幕信息 ==="; mediainfo "$1"; echo ""; echo "=== 内容预览 ==="; head -50 "$1"; else cat "$1" | head -50; fi' '''
 
 
 # 💡 默认预览器配置
