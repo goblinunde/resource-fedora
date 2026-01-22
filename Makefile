@@ -36,6 +36,8 @@ help:  ## 显示此帮助信息
 	@printf "  %-20s %s\n" "deploy-nvim" "部署 Neovim 配置"
 	@printf "  %-20s %s\n" "deploy-tmux" "部署 Tmux 配置"
 	@printf "  %-20s %s\n" "deploy-yazi" "部署 Yazi 文件管理器"
+	@printf "  %-20s %s\n" "yazi-themes" "列出 Yazi 可用主题"
+	@printf "  %-20s %s\n" "yazi-theme-*" "切换 Yazi 主题 (tokyo/storm/catppuccin/gruvbox/nord)"
 	@printf "  %-20s %s\n" "deploy-git" "部署 Git 配置"
 	@printf "  %-20s %s\n" "deploy-starship" "部署 Starship 主题"
 	@echo "---------------------------------------------------------------------------"
@@ -118,6 +120,25 @@ deploy-yazi: ## 部署 Yazi 文件管理器
 		echo "$(COLOR_RED)错误: yazi 配置目录不存在$(COLOR_RESET)"; \
 	fi
 
+# Yazi 主题管理命令 (委托给 yazi/Makefile.themes)
+yazi-themes: ## 列出 Yazi 可用主题
+	@make -C yazi -f Makefile.themes theme-list
+
+yazi-theme-tokyo: ## 应用 Tokyo Night 主题
+	@make -C yazi -f Makefile.themes theme-tokyo
+
+yazi-theme-storm: ## 应用 Tokyo Night Storm 主题
+	@make -C yazi -f Makefile.themes theme-storm
+
+yazi-theme-catppuccin: ## 应用 Catppuccin Mocha 主题
+	@make -C yazi -f Makefile.themes theme-catppuccin
+
+yazi-theme-gruvbox: ## 应用 Gruvbox Dark 主题
+	@make -C yazi -f Makefile.themes theme-gruvbox
+
+yazi-theme-nord: ## 应用 Nord 主题
+	@make -C yazi -f Makefile.themes theme-nord
+
 deploy-starship: ## 部署 Starship 主题
 	@echo "$(COLOR_CYAN)📦 部署 Starship 主题...$(COLOR_RESET)"
 	@bash $(SETUP_SCRIPT) --starship
@@ -157,6 +178,8 @@ list-docs: ## 列出所有可用文档
 	@[ -f "docs/VIM.md" ] && echo "  ✓ VIM.md - Vim 配置说明" || true
 	@[ -f "nvim/README.md" ] && echo "  ✓ nvim/README.md - Neovim 配置说明" || true
 	@[ -f "ruff/README.md" ] && echo "  ✓ ruff/README.md - Ruff 配置说明" || true
+	@[ -f "yazi/YAZI_CONFIG_GUIDE.md" ] && echo "  ✓ yazi/YAZI_CONFIG_GUIDE.md - Yazi 配置指南" || true
+	@[ -f "yazi/THEMES.md" ] && echo "  ✓ yazi/THEMES.md - Yazi 主题指南" || true
 	@echo ""
 
 # ============================================================================
