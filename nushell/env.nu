@@ -35,6 +35,7 @@ $env.PATH = ($env.PATH | split row (char esep) | prepend [
 ])
 
 
+def create_left_prompt [] {
     let dir = match (do --ignore-shell-errors { $env.PWD | path relative-to $nu.home-path }) {
         null => $env.PWD
         '' => '~'
