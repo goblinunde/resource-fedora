@@ -269,29 +269,64 @@ ya pkg add yazi-rs/plugins:git
 | 工具 | 用途 | 安装命令 |
 |------|------|----------|
 | `yazi` | Yazi 主程序 | `sudo dnf install yazi` |
+| `ya` | Yazi 包管理器 | `cargo install yazi-cli` |
 
-### 预览增强依赖
+### 基础预览依赖
 
 | 工具 | 用途 | 安装命令 |
 |------|------|----------|
 | `bat` | 代码语法高亮 | `sudo dnf install bat` |
-| `glow` | Markdown 渲染 | `sudo dnf install glow` |
-| `poppler-utils` | PDF 预览 | `sudo dnf install poppler-utils` |
+| `glow` | Markdown 渲染 (备选) | `sudo dnf install glow` |
 | `eza` | 目录树显示 | `cargo install eza` |
 | `hexyl` | 十六进制查看 | `sudo dnf install hexyl` |
-| `mediainfo` | 媒体信息 | `sudo dnf install mediainfo` |
-| `exiftool` | EXIF 信息 | `sudo dnf install perl-Image-ExifTool` |
-| `fd` | 文件搜索 | `sudo dnf install fd-find` |
-| `rg` (ripgrep) | 内容搜索 | `sudo dnf install ripgrep` |
-| `sqlite3` | SQLite 数据库预览 | `sudo dnf install sqlite` |
 
-### 可选依赖
+### 高级预览依赖
 
 | 工具 | 用途 | 安装命令 |
 |------|------|----------|
+| **PDF 预览** |||
+| `poppler-utils` | PDF 转图片 (pdftoppm, pdftotext) | `sudo dnf install poppler-utils` |
+| **数据文件** |||
+| `rich-cli` | 美化 Markdown/JSON/CSV | `uv tool install rich-cli` |
+| `duckdb` | 数据文件分析 (CSV/Parquet) | `sudo dnf install duckdb` |
+| `nbpreview` | Jupyter Notebook 预览 | `uv tool install nbpreview` |
+| **媒体文件** |||
+| `exiftool` | 音频元数据查看 | `sudo dnf install perl-Image-ExifTool` |
+| `mediainfo` | 媒体文件详细信息 | `sudo dnf install mediainfo` |
+| `ffmpeg` | 视频信息提取 (备选) | `sudo dnf install ffmpeg` |
+| **数据库** |||
+| `sqlite3` | SQLite 数据库预览 | `sudo dnf install sqlite` |
+
+### 搜索和导航工具
+
+| 工具 | 用途 | 安装命令 |
+|------|------|----------|
+| `fd` | 文件搜索 | `sudo dnf install fd-find` |
+| `rg` (ripgrep) | 内容搜索 | `sudo dnf install ripgrep` |
 | `fzf` | 模糊查找 | `sudo dnf install fzf` |
 | `zoxide` | 智能目录跳转 | `sudo dnf install zoxide` |
+
+### 可选工具
+
+| 工具 | 用途 | 安装命令 |
+|------|------|----------|
 | `mpv` | 媒体播放 | `sudo dnf install mpv` |
+| `jq` | JSON 处理 | `sudo dnf install jq` |
+| `ueberzug` | 图片预览 (非 Kitty 终端) | `sudo dnf install ueberzug` |
+
+### 一键安装
+
+```bash
+# 基础 + 高级预览工具 (系统包)
+sudo dnf install -y \
+    bat glow eza hexyl \
+    poppler-utils perl-Image-ExifTool ffmpeg mediainfo duckdb sqlite \
+    fd-find ripgrep fzf
+
+# Python 工具 (使用 uv)
+uv tool install rich-cli
+uv tool install nbpreview
+```
 
 ---
 

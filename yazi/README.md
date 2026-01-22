@@ -7,8 +7,14 @@
 - 📝 **完整的中文注释** - 所有配置项都有详细的中文说明
 - 🎨 **Tokyo Night 主题** - 美观的暗色主题配色
 - ⌨️ **Vim 风格快捷键** - 符合 Vim 用户习惯的键位绑定
-- 🔌 **增强预览功能** - 支持 Markdown、PDF、图片、CSV、SQLite 等格式
-- 🛠️ **插件系统集成** - 预配置 piper.yazi 和 mux.yazi 插件
+- 🔌 **增强预览功能** - 支持 20+ 种文件格式的高级预览
+  - 📄 **PDF** - pdftoppm 图片预览
+  - 📊 **数据文件** - CSV/TSV/Parquet (Rich/DuckDB)
+  - 📓 **Jupyter Notebook** - nbpreview 渲染
+  - 🎵 **音频/视频** - exiftool/mediainfo 元数据
+  - 📝 **Markdown/JSON** - Rich-CLI 美化渲染
+  - 🗄️ **SQLite** - 数据库结构预览
+- 🛠️ **插件生态系统** - 预配置 7 个增强插件
 
 ## 📁 文件说明
 
@@ -62,20 +68,42 @@ ya pkg add peterfication/mux
 
 ### 4. 安装依赖工具
 
+#### 系统工具 (Fedora)
+
 ```bash
-# 安装预览增强工具
+# 基础预览工具
 sudo dnf install \
     bat \              # 代码语法高亮
     glow \             # Markdown 渲染
-    poppler-utils \    # PDF 预览
     eza \              # 目录树显示
-    hexyl \            # 十六进制查看器
-    mediainfo \        # 媒体信息
-    perl-Image-ExifTool  # EXIF 信息
+    hexyl              # 十六进制查看器
 
-# 可选: 安装搜索工具(如果未安装)
+# 高级预览工具
+sudo dnf install \
+    poppler-utils \    # PDF 预览 (pdftoppm, pdftotext)
+    perl-Image-ExifTool \  # 音频元数据 (exiftool)
+    ffmpeg \           # 视频信息提取
+    mediainfo \        # 媒体文件详细信息
+    duckdb \           # 数据文件分析
+    sqlite             # SQLite 数据库
+
+# 可选: 搜索工具
 sudo dnf install fd-find ripgrep fzf
 ```
+
+#### Python 工具 (使用 uv)
+
+```bash
+# 安装 uv (如果还没有)
+curl -LsSf https://astral.sh/uv/install.sh | sh
+
+# 安装预览增强工具
+uv tool install rich-cli    # 美化 Markdown/JSON/CSV
+uv tool install nbpreview    # Jupyter Notebook 预览
+```
+
+> [!TIP]
+> **或者使用自动安装脚本**: `bash install_yazi_config.sh` 会自动检查并提示安装缺失的依赖
 
 ### 5. 启动 Yazi
 
@@ -91,12 +119,29 @@ yazi
 
 配置中集成了以下预览增强功能:
 
-- **Markdown** - 使用 `glow` 进行渲染预览
-- **CSV** - 使用 `bat` 进行语法高亮
-- **PDF** - 内置 PDF 预览器(需要 poppler-utils)
-- **图片** - 内置图片预览器,支持多种格式
+**文本和数据**:
+
+- **Markdown** - 使用 `rich-cli` (备选 `glow`) 美化渲染
+- **JSON** - 使用 `rich-cli` 语法高亮和格式化
+- **CSV/TSV** - 使用 `rich-cli` 表格显示或 `duckdb` 数据分析
+- **Jupyter Notebook** - 使用 `nbpreview` 渲染 `.ipynb` 文件
+
+**文档和数据库**:
+
+- **PDF** - 使用 `pdftoppm` 转换首页为图片预览
+- **SQLite** - 显示数据库结构 (`.schema`)
+- **Parquet** - 使用 `duckdb` 查询和预览数据
+
+**媒体文件**:
+
+- **图片** - 内置图片预览器，支持多种格式
+- **音频** - 使用 `exiftool` 显示元数据和封面
+- **视频** - 使用 `mediainfo` / `ffmpeg` 显示详细媒体信息
+- **字幕** - 预览字幕文件内容和元数据
+
+**其他**:
+
 - **目录树** - 使用 `eza` 显示目录结构
-- **SQLite** - 显示数据库结构
 - **压缩包** - 显示压缩包内容列表
 - **后备预览** - 使用 `hexyl` 十六进制查看不支持的文件
 
