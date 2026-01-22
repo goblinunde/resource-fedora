@@ -165,7 +165,8 @@ deploy_bash() {
 deploy_zsh() {
     print_header "📦 部署 Zsh Shell 配置"
     print_info "用途: 主力 Shell，高度定制化 (13KB+ 配置)"
-    print_info "特性: Oh-My-Zsh 框架、Starship 提示符、智能补全"
+    print_info "框架: Oh-My-Zsh + 主题插件"
+    print_info "特性: 智能补全、语法高亮、自动建议"
     echo
     
     # 检查 Zsh 是否安装
@@ -177,11 +178,33 @@ deploy_zsh() {
         }
     fi
     
+    # 检查 Oh-My-Zsh 是否安装
+    if [[ ! -d "${HOME}/.oh-my-zsh" ]]; then
+        print_warning "⚠️  未检测到 Oh-My-Zsh 安装"
+        print_info "Oh-My-Zsh 是 Zsh 的强大配置框架，建议安装"
+        echo
+        read -p "$(echo -e "${COLOR_YELLOW}是否现在安装 Oh-My-Zsh? [Y/n]: ${COLOR_RESET}")" -n 1 -r
+        echo
+        
+        if [[ ! $REPLY =~ ^[Nn]$ ]]; then
+            print_info "正在安装 Oh-My-Zsh..."
+            sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended || {
+                print_error "Oh-My-Zsh 安装失败"
+                print_info "请手动安装: sh -c '\$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)'"
+            }
+        else
+            print_warning "跳过 Oh-My-Zsh 安装，配置文件可能无法正常工作"
+        fi
+    else
+        print_success "已检测到 Oh-My-Zsh 安装"
+    fi
+    
     deploy_config ".zshrc" "${CONFIG_FILES[".zshrc"]}"
     
     echo
     print_success "Zsh 配置部署完成！"
     print_info "使用方法: 切换默认 Shell 'chsh -s $(which zsh)'"
+    print_info "插件推荐: zsh-autosuggestions, zsh-syntax-highlighting"
 }
 
 # 部署 Fish 配置
@@ -335,9 +358,10 @@ deploy_git() {
 
 # 部署 Starship 主题
 deploy_starship() {
-    print_header "📦 部署 Starship 主题"
-    print_info "用途: 跨 Shell 提示符，Tokyo Night 配色"
-    print_info "特性: 显示目录、Git、语言版本、时间"
+    print_header "📦 部署 Starship 主题 (Tokyo Night)"
+    print_info "用途: 跨 Shell 提示符 (Bash/Fish/Nushell)"
+    print_info "配色: Tokyo Night"
+    print_info "注意: Zsh 使用 Oh-My-Zsh 框架，不需要 Starship"
     echo
     
     # 检查 Starship 是否安装
@@ -355,12 +379,111 @@ deploy_starship() {
     
     echo
     print_success "Starship 主题部署完成！"
+    print_info "适用 Shell: Bash, Fish, Nushell"
+    print_info "配置位置: ~/.config/starship.toml"
+    echo
     print_info "使用方法:"
-    print_info "├─ Bash: 在 ~/.bashrc 添加 'eval \"\$(starship init bash)\"'"
-    print_info "├─ Zsh:  在 ~/.zshrc 添加 'eval \"\$(starship init zsh)\"'"
+    print_info "├─ Bash: 在 ~/.bashrc 末尾添加 'eval \"\$(starship init bash)\"'"
     print_info "├─ Fish: 在 ~/.config/fish/config.fish 添加 'starship init fish | source'"
-    print_info "└─ Nushell: 在 config.nu 添加 Starship 初始化"
-    print_warning "注意: 需要安装 Nerd Font 字体以正确显示图标"
+    print_info "└─ Nushell: 在 config.nu 添加 Starship 初始化配置"
+    echo
+    print_warning "注意事项:"
+    print_warning "1. 需要安装 Nerd Font 字体以正确显示图标"
+    print_warning "   推荐字体: JetBrains Mono Nerd Font, 0xProto Nerd Font"
+    print_warning "   安装命令: sudo dnf install -y jetbrains-mono-fonts-all"
+    print_warning "2. Zsh 用户请使用 Oh-My-Zsh 框架，无需 Starship"
+}
+
+# 部署 Ruff 配置 (Python Linter/Formatter)
+deploy_ruff() {
+    print_header "📦 部署 Ruff Python 工具配置"
+    print_info "用途: 快速 Python Linter 和 Formatter"
+    print_info "配置: Ruff 全局配置文件"
+    echo
+    
+    # 检查 Ruff 是否安装
+    if ! command -v ruff &>/dev/null; then
+        print_warning "⚠️  Ruff 未安装"
+        print_info "Ruff 是现代化的 Python Linter/Formatter，速度极快"
+        echo
+        print_info "安装方法:"
+        print_info "方法 1 (DNF):    sudo dnf install -y ruff"
+        print_info "方法 2 (pipx):   pipx install ruff"
+        print_info "方法 3 (pip):    pip install ruff"
+        echo
+        read -p "$(echo -e "${COLOR_YELLOW}是否通过 DNF 安装 Ruff? [y/N]: ${COLOR_RESET}")" -n 1 -r
+        echo
+        
+        if [[ $REPLY =~ ^[Yy]$ ]]; then
+            sudo dnf install -y ruff || {
+                print_error "Ruff 安装失败，请手动安装"
+            }
+        else
+            print_warning "跳过 Ruff 安装"
+        fi
+    else
+        print_success "已检测到 Ruff 安装: $(ruff --version)"
+    fi
+    
+    # 检查并部署 ruff 配置
+    if file_exists "${SCRIPT_DIR}/ruff"; then
+        deploy_config "ruff" "${CONFIG_DIR}/ruff"
+        print_success "Ruff 配置部署完成！"
+    else
+        print_info "未找到 Ruff 配置文件，跳过配置部署"
+    fi
+}
+
+# 引导安装 Conda/Mamba
+deploy_conda_tools() {
+    print_header "📦 Conda/Mamba Python 包管理工具"
+    print_info "用途: Python 环境和包管理"
+    print_info "推荐: Mamba (Miniforge) - 比 Conda 更快"
+    echo
+    
+    # 检查是否已安装
+    local has_conda=false
+    local has_mamba=false
+    
+    if command -v conda &>/dev/null; then
+        has_conda=true
+        print_success "已检测到 Conda: $(conda --version)"
+    fi
+    
+    if command -v mamba &>/dev/null; then
+        has_mamba=true
+        print_success "已检测到 Mamba: $(mamba --version)"
+    fi
+    
+    if [[ "$has_conda" == "true" ]] || [[ "$has_mamba" == "true" ]]; then
+        echo
+        # 部署 .condarc 配置
+        if file_exists "${SCRIPT_DIR}/.condarc"; then
+            deploy_config ".condarc" "${CONFIG_FILES[".condarc"]}"
+            print_success "Conda 配置文件部署完成！"
+        fi
+        return 0
+    fi
+    
+    # 未安装，提供安装引导
+    print_warning "⚠️  未检测到 Conda/Mamba 安装"
+    echo
+    print_info "推荐安装选项:"
+    echo
+    print_info "${COLOR_BOLD}选项 1: Miniforge (Mamba)${COLOR_RESET} ${COLOR_GREEN}[推荐]${COLOR_RESET}"
+    print_info "  - 速度快，社区驱动"
+    print_info "  - 默认使用 conda-forge 源"
+    print_info "  - 安装命令:"
+    echo -e "    ${COLOR_CYAN}curl -L -O https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-Linux-x86_64.sh${COLOR_RESET}"
+    echo -e "    ${COLOR_CYAN}bash Miniforge3-Linux-x86_64.sh${COLOR_RESET}"
+    echo
+    print_info "${COLOR_BOLD}选项 2: Miniconda (官方精简版)${COLOR_RESET}"
+    print_info "  - 官方维护，体积小"
+    print_info "  - 安装命令:"
+    echo -e "    ${COLOR_CYAN}curl -O https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh${COLOR_RESET}"
+    echo -e "    ${COLOR_CYAN}bash Miniconda3-latest-Linux-x86_64.sh${COLOR_RESET}"
+    echo
+    print_info "安装后请重新运行此脚本部署 .condarc 配置文件"
 }
 
 # ============================= 主菜单功能 ===================================
@@ -419,19 +542,21 @@ interactive_mode() {
         echo
         echo -e "${COLOR_BOLD}选择要部署的配置:${COLOR_RESET}"
         echo -e "  ${COLOR_GREEN}1)${COLOR_RESET} Bash Shell"
-        echo -e "  ${COLOR_GREEN}2)${COLOR_RESET} Zsh Shell"
+        echo -e "  ${COLOR_GREEN}2)${COLOR_RESET} Zsh Shell (Oh-My-Zsh)"
         echo -e "  ${COLOR_GREEN}3)${COLOR_RESET} Fish Shell"
         echo -e "  ${COLOR_GREEN}4)${COLOR_RESET} Nushell"
         echo -e "  ${COLOR_GREEN}5)${COLOR_RESET} Vim 编辑器"
         echo -e "  ${COLOR_GREEN}6)${COLOR_RESET} Neovim (LazyVim)"
         echo -e "  ${COLOR_GREEN}7)${COLOR_RESET} Tmux 终端复用器"
         echo -e "  ${COLOR_GREEN}8)${COLOR_RESET} Git 配置"
-        echo -e "  ${COLOR_GREEN}9)${COLOR_RESET} Starship 主题"
+        echo -e "  ${COLOR_GREEN}9)${COLOR_RESET} Starship 主题 (Bash/Fish/Nushell)"
+        echo -e "  ${COLOR_GREEN}r)${COLOR_RESET} Ruff (Python Linter)"
+        echo -e "  ${COLOR_GREEN}c)${COLOR_RESET} Conda/Mamba 引导"
         echo -e "  ${COLOR_BLUE}a)${COLOR_RESET} 全部部署"
         echo -e "  ${COLOR_RED}q)${COLOR_RESET} 退出"
         echo
         
-        read -p "$(echo -e "${COLOR_CYAN}请输入选项 [1-9/a/q]: ${COLOR_RESET}")" -n 1 -r choice
+        read -p "$(echo -e "${COLOR_CYAN}请输入选项 [1-9/r/c/a/q]: ${COLOR_RESET}")" -n 1 -r choice
         echo
         
         case "$choice" in
@@ -444,6 +569,8 @@ interactive_mode() {
             7) deploy_tmux ;;
             8) deploy_git ;;
             9) deploy_starship ;;
+            r|R) deploy_ruff ;;
+            c|C) deploy_conda_tools ;;
             a|A) deploy_all; break ;;
             q|Q) print_info "退出脚本"; exit 0 ;;
             *) print_error "无效选项，请重新选择" ;;
@@ -458,10 +585,10 @@ interactive_mode() {
 deploy_all() {
     print_header "🚀 一键部署所有配置"
     print_info "这将部署以下所有配置:"
-    print_info "├─ Shell: Bash, Zsh, Fish, Nushell"
-    print_info "├─ 编辑器: Vim, Neovim"
+    print_info "├─ Shell: Bash, Zsh (Oh-My-Zsh), Fish, Nushell"
+    print_info "├─ 编辑器: Vim, Neovim (LazyVim)"
     print_info "├─ 终端: Tmux"
-    print_info "├─ 开发: Git, Conda"
+    print_info "├─ 开发工具: Git, Conda, Ruff"
     print_info "└─ 主题: Starship (Tokyo Night)"
     echo
     
@@ -483,6 +610,8 @@ deploy_all() {
     deploy_tmux
     deploy_git
     deploy_starship
+    deploy_ruff
+    deploy_conda_tools
     
     # 显示总结
     print_header "✅ 所有配置部署完成"
@@ -494,6 +623,7 @@ deploy_all() {
     print_info "3. 对于 Neovim: 首次打开会自动安装插件"
     print_info "4. 对于 Tmux: 启动后按 'Prefix + I' 安装插件"
     print_info "5. 检查 Git 配置并根据需要修改个人信息"
+    print_info "6. 如需要 Starship: 添加初始化命令到对应 Shell 配置"
     echo
     print_success "享受你的新配置！ 🎉"
 }

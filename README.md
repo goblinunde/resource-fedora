@@ -13,17 +13,19 @@
 ## ✨ 特性
 
 - 🎨 **统一美化主题** - 采用 Tokyo Night 配色方案，跨 Shell 和编辑器统一视觉体验
+  - **Bash/Fish/Nushell**: 使用 [Starship](https://starship.rs/) 跨 Shell 提示符
+  - **Zsh**: 使用 [Oh-My-Zsh](https://ohmyz.sh/) 框架 + 主题插件
 - 🐚 **多 Shell 支持** - 提供 Bash、Zsh、Fish 和 Nushell 的完整配置
 - ⚡ **现代化工具链** - 集成 Starship、bat、lsd、fd、rg 等现代 CLI 工具
 - 📝 **强大编辑器配置** - LazyVim 定制化 Neovim 配置，支持 Python、Rust、LaTeX 开发
-- 🔧 **一键部署脚本** - 支持全量配置和模块化分别配置
+- 🔧 **一键部署脚本** - 支持全量配置和模块化分别配置，自动引导安装缺失工具
 - 💾 **自动备份** - 配置部署前自动备份现有配置文件
 
 ---
 
 ## 📁 目录结构
 
-```
+```text
 resource-fedora/
 ├── 📄 Shell 配置文件
 │   ├── .bashrc              # Bash shell 配置
@@ -71,18 +73,70 @@ resource-fedora/
 
 ### 前置要求
 
-确保你的系统满足以下条件：
+**系统要求**: Fedora 43 Workstation Edition (推荐) 或其他基于 Fedora 43 的系统
+
+#### 必需工具
 
 ```bash
 # 检查系统版本
 cat /etc/fedora-release  # 应显示 Fedora Linux 43
 
-# 安装 Git (如未安装)
+# 安装 Git (必需)
 sudo dnf install -y git
-
-# (可选) 安装现代化 CLI 工具
-sudo dnf install -y bat lsd fd-find ripgrep starship
 ```
+
+#### 推荐工具 (setup.sh 会自动检测并引导安装)
+
+**Shell 环境**:
+
+```bash
+# Starship - 跨 Shell 提示符 (Bash/Fish/Nushell)
+sudo dnf install -y starship
+
+# Oh-My-Zsh - Zsh 框架 (脚本会自动引导安装)
+# 无需手动安装，运行 setup.sh --shell zsh 时会提示
+
+# 可选 Shell
+sudo dnf install -y zsh fish nushell
+```
+
+**编辑器**:
+
+```bash
+# Vim
+sudo dnf install -y vim
+
+# Neovim (推荐 ≥ 0.9.0)
+sudo dnf install -y neovim
+```
+
+**终端工具**:
+
+```bash
+# Tmux - 终端复用器
+sudo dnf install -y tmux
+
+# 现代化 CLI 工具
+sudo dnf install -y bat lsd fd-find ripgrep
+```
+
+**开发工具**:
+
+```bash
+# Ruff - Python Linter/Formatter
+sudo dnf install -y ruff  # 或使用 pipx install ruff
+
+# Conda/Mamba - Python 包管理
+# Mamba (推荐，比 Conda 更快)
+curl -L -O https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-Linux-x86_64.sh
+bash Miniforge3-Linux-x86_64.sh
+
+# 或使用传统 Miniconda
+# curl -O https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
+# bash Miniconda3-latest-Linux-x86_64.sh
+```
+
+> **💡 提示**: `setup.sh` 脚本会自动检测这些工具是否已安装，如未安装会提供安装引导。
 
 ### 克隆仓库
 
@@ -217,9 +271,26 @@ bash setup.sh --help
 ### Starship 主题 (`tokyo-night.toml`)
 
 - **配色**: Tokyo Night
+- **适用 Shell**: **Bash, Fish, Nushell**（Zsh 使用 Oh-My-Zsh 框架）
 - **显示模块**: 目录、Git、语言版本、时间
 - **支持语言**: Node.js、Rust、Go、PHP
-- **Nerd Font**: 需要安装 Nerd Font 字体支持图标
+- **Nerd Font 要求**: 需要安装 Nerd Font 字体支持图标
+
+  ```bash
+  # 推荐字体: JetBrains Mono Nerd Font 或 0xProto Nerd Font
+  sudo dnf install -y jetbrains-mono-fonts-all
+  # 或从 https://www.nerdfonts.com/ 下载安装
+  ```
+
+- **配置位置**: 部署后位于 `~/.config/starship.toml`
+
+### Oh-My-Zsh 配置 (Zsh 专用)
+
+- **框架**: Oh-My-Zsh
+- **主题**: 内置于 `.zshrc` 配置
+- **插件**: Git、语法高亮、自动建议等
+- **安装**: `setup.sh --shell zsh` 会自动检测并引导安装
+- **配置文件**: `~/.zshrc`
 
 ---
 
