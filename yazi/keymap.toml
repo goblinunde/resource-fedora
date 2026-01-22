@@ -159,6 +159,11 @@ keymap = [
 	# ----- 任务管理 -----
 	{ on = "w", run = "tasks:show", desc = "显示任务管理器" },
 
+	# ----- 主题切换 -----
+	{ on = ["<Space>", "t"], run = "plugin theme-switcher", desc = "主题选择器" },
+	{ on = ["<Space>", "tn"], run = "plugin theme-switcher --args=next", desc = "下一个主题" },
+	{ on = ["<Space>", "tp"], run = "plugin theme-switcher --args=prev", desc = "上一个主题" },
+
 	# ----- 帮助 -----
 	{ on = "~", run = "help", desc = "打开帮助" },
 	{ on = "<F1>", run = "help", desc = "打开帮助" },

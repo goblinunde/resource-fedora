@@ -1,0 +1,128 @@
+# Yazi 主题配置 - Tokyo Night Storm
+# 更深的背景色，更高的对比度
+
+"$schema" = "https://yazi-rs.github.io/schemas/theme.json"
+
+[flavor]
+use = "tokyo-night-storm"
+
+# ===== Tokyo Night Storm 调色板 =====
+# 背景色: #24283b (比标准版更深)
+# 前景色: #c0caf5
+# 强调色: 更鲜艳的配色
+
+[manager]
+cwd = { fg = "#7dcfff", bold = true }  # 青色更亮
+hovered = { reversed = true }
+preview_hovered = { underline = true }
+
+# 查找高亮
+find_keyword = { fg = "#ff9e64", bold = true, italic = true, underline = true }
+find_position = { fg = "#bb9af7", bg = "reset", bold = true }
+
+# 标记文件
+marker_copied = { fg = "#9ece6a", bg = "#9ece6a" }
+marker_cut = { fg = "#f7768e", bg = "#f7768e" }
+marker_marked = { fg = "#7dcfff", bg = "#7dcfff" }
+marker_selected = { fg = "#e0af68", bg = "#e0af68" }
+
+# 标签页
+tab_active = { fg = "#1a1b26", bg = "#7dcfff", bold = true }
+tab_inactive = { fg = "#565f89", bg = "#1f2335" }
+tab_width = 1
+
+# 边框
+border_symbol = "│"
+border_style = { fg = "#414868" }
+
+[status]
+separator_open = ""
+separator_close = ""
+separator_style = { fg = "#414868", bg = "#414868" }
+
+mode_normal = { fg = "#1a1b26", bg = "#7dcfff", bold = true }
+mode_select = { fg = "#1a1b26", bg = "#9ece6a", bold = true }
+mode_unset = { fg = "#1a1b26", bg = "#f7768e", bold = true }
+
+progress_label = { fg = "#c0caf5", bold = true }
+progress_normal = { fg = "#7dcfff", bg = "#414868" }
+progress_error = { fg = "#f7768e", bg = "#414868" }
+
+permissions_t = { fg = "#9ece6a" }
+permissions_r = { fg = "#e0af68" }
+permissions_w = { fg = "#f7768e" }
+permissions_x = { fg = "#7dcfff" }
+permissions_s = { fg = "#bb9af7" }
+
+[input]
+border = { fg = "#7dcfff" }
+title = { fg = "#c0caf5" }
+value = { fg = "#e0af68" }
+selected = { reversed = true }
+
+[pick]
+border = { fg = "#7dcfff" }
+active = { fg = "#bb9af7", bold = true }
+inactive = { fg = "#565f89" }
+
+[confirm]
+border = { fg = "#f7768e" }
+title = { fg = "#c0caf5" }
+content = { fg = "#c0caf5" }
+
+[tasks]
+border = { fg = "#7dcfff" }
+title = { fg = "#c0caf5" }
+hovered = { fg = "#bb9af7", underline = true }
+
+[help]
+on = { fg = "#bb9af7" }
+run = { fg = "#7dcfff" }
+desc = { fg = "#9ece6a" }
+hovered = { reversed = true, bold = true }
+footer = { fg = "#565f89", bg = "#1a1b26" }
+
+[filetype]
+rules = [
+    # 编程语言
+    { name = "*.rs", fg = "#ff9e64", bold = true },
+    { name = "*.py", fg = "#e0af68", bold = true },
+    { name = "*.{js,ts,jsx,tsx}", fg = "#e0af68" },
+    { name = "*.{c,cpp,cc,h,hpp}", fg = "#7dcfff" },
+    { name = "*.go", fg = "#7dcfff" },
+    { name = "*.{sh,bash,zsh,fish}", fg = "#9ece6a" },
+    { name = "*.lua", fg = "#7aa2f7" },
+    
+    # 文档
+    { name = "*.md", fg = "#7dcfff", bold = true },
+    { name = "*.{pdf,epub}", fg = "#f7768e" },
+    
+    # 多媒体
+    { mime = "image/*", fg = "#bb9af7" },
+    { mime = "video/*", fg = "#e0af68" },
+    { mime = "audio/*", fg = "#7dcfff" },
+    
+    # 压缩包
+    { name = "*.{zip,rar,7z,tar,gz}", fg = "#f7768e" },
+]
+
+[icon]
+dirs = [
+    { name = ".config", text = "" },
+    { name = ".git", text = "" },
+    { name = "Documents", text = "" },
+    { name = "Downloads", text = "" },
+    { name = "Pictures", text = "" },
+]
+
+files = [
+    { name = "*.rs", text = "" },
+    { name = "*.py", text = "" },
+    { name = "*.js", text = "" },
+    { name = "*.md", text = "" },
+    { name = "*.pdf", text = "" },
+]
+
+cwd = ""
+file = ""
+folder = ""

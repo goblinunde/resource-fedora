@@ -1,0 +1,107 @@
+# Yazi 主题配置 - Gruvbox Dark
+# 复古怀旧配色方案
+
+"$schema" = "https://yazi-rs.github.io/schemas/theme.json"
+
+[flavor]
+use = "gruvbox-dark"
+
+# ===== Gruvbox Dark 调色板 =====
+# bg0: #282828 (背景)
+# fg: #ebdbb2 (前景)
+# red: #cc241d / #fb4934
+# green: #98971a / #b8bb26
+# yellow: #d79921 / #fabd2f
+# blue: #458588 / #83a598
+# purple: #b16286 / #d3869b
+# aqua: #689d6a / #8ec07c
+# orange: #d65d0e / #fe8019
+
+[manager]
+cwd = { fg = "#fabd2f", bold = true }
+hovered = { reversed = true }
+preview_hovered = { underline = true }
+
+find_keyword = { fg = "#fe8019", bold = true, italic = true, underline = true }
+find_position = { fg = "#d3869b", bg = "reset", bold = true }
+
+marker_copied = { fg = "#b8bb26", bg = "#b8bb26" }
+marker_cut = { fg = "#fb4934", bg = "#fb4934" }
+marker_marked = { fg = "#8ec07c", bg = "#8ec07c" }
+marker_selected = { fg = "#fabd2f", bg = "#fabd2f" }
+
+tab_active = { fg = "#282828", bg = "#fabd2f", bold = true }
+tab_inactive = { fg = "#a89984", bg = "#3c3836" }
+tab_width = 1
+
+border_symbol = "│"
+border_style = { fg = "#504945" }
+
+[status]
+separator_open = ""
+separator_close = ""
+separator_style = { fg = "#504945", bg = "#504945" }
+
+mode_normal = { fg = "#282828", bg = "#83a598", bold = true }
+mode_select = { fg = "#282828", bg = "#b8bb26", bold = true }
+mode_unset = { fg = "#282828", bg = "#fb4934", bold = true }
+
+progress_label = { fg = "#ebdbb2", bold = true }
+progress_normal = { fg = "#83a598", bg = "#504945" }
+progress_error = { fg = "#fb4934", bg = "#504945" }
+
+permissions_t = { fg = "#b8bb26" }
+permissions_r = { fg = "#fabd2f" }
+permissions_w = { fg = "#fb4934" }
+permissions_x = { fg = "#83a598" }
+permissions_s = { fg = "#d3869b" }
+
+[input]
+border = { fg = "#83a598" }
+title = { fg = "#ebdbb2" }
+value = { fg = "#fe8019" }
+selected = { reversed = true }
+
+[pick]
+border = { fg = "#83a598" }
+active = { fg = "#d3869b", bold = true }
+inactive = { fg = "#a89984" }
+
+[confirm]
+border = { fg = "#fb4934" }
+title = { fg = "#ebdbb2" }
+content = { fg = "#ebdbb2" }
+
+[tasks]
+border = { fg = "#83a598" }
+title = { fg = "#ebdbb2" }
+hovered = { fg = "#d3869b", underline = true }
+
+[help]
+on = { fg = "#d3869b" }
+run = { fg = "#8ec07c" }
+desc = { fg = "#b8bb26" }
+hovered = { reversed = true, bold = true }
+footer = { fg = "#a89984", bg = "#282828" }
+
+[filetype]
+rules = [
+    { name = "*.rs", fg = "#fe8019", bold = true },
+    { name = "*.py", fg = "#fabd2f", bold = true },
+    { name = "*.{js,ts}", fg = "#fabd2f" },
+    { name = "*.{c,cpp}", fg = "#83a598" },
+    { name = "*.go", fg = "#8ec07c" },
+    { name = "*.{sh,bash}", fg = "#b8bb26" },
+    { name = "*.lua", fg = "#83a598" },
+    { name = "*.md", fg = "#8ec07c", bold = true },
+    { name = "*.{pdf,epub}", fg = "#fb4934" },
+    { mime = "image/*", fg = "#d3869b" },
+    { mime = "video/*", fg = "#fe8019" },
+    { mime = "audio/*", fg = "#8ec07c" },
+    { name = "*.{zip,rar,7z}", fg = "#fb4934" },
+]
+
+[icon]
+cwd = ""
+file = ""
+folder = ""

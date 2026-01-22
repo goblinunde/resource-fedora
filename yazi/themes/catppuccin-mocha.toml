@@ -1,0 +1,114 @@
+# Yazi 主题配置 - Catppuccin Mocha
+# 柔和的深色主题，温暖舒适
+
+"$schema" = "https://yazi-rs.github.io/schemas/theme.json"
+
+[flavor]
+use = "catppuccin-mocha"
+
+# ===== Catppuccin Mocha 调色板 =====
+# Base: #1e1e2e (背景)
+# Text: #cdd6f4 (前景)
+# Rosewater: #f5e0dc
+# Flamingo: #f2cdcd
+# Pink: #f5c2e7
+# Mauve: #cba6f7
+# Red: #f38ba8
+# Maroon: #eba0ac
+# Peach: #fab387
+# Yellow: #f9e2af
+# Green: #a6e3a1
+# Teal: #94e2d5
+# Sky: #89dceb
+# Sapphire: #74c7ec
+# Blue: #89b4fa
+# Lavender: #b4befe
+
+[manager]
+cwd = { fg = "#89b4fa", bold = true }
+hovered = { reversed = true }
+preview_hovered = { underline = true }
+
+find_keyword = { fg = "#fab387", bold = true, italic = true, underline = true }
+find_position = { fg = "#cba6f7", bg = "reset", bold = true }
+
+marker_copied = { fg = "#a6e3a1", bg = "#a6e3a1" }
+marker_cut = { fg = "#f38ba8", bg = "#f38ba8" }
+marker_marked = { fg = "#94e2d5", bg = "#94e2d5" }
+marker_selected = { fg = "#f9e2af", bg = "#f9e2af" }
+
+tab_active = { fg = "#1e1e2e", bg = "#89b4fa", bold = true }
+tab_inactive = { fg = "#6c7086", bg = "#313244" }
+tab_width = 1
+
+border_symbol = "│"
+border_style = { fg = "#45475a" }
+
+[status]
+separator_open = ""
+separator_close = ""
+separator_style = { fg = "#45475a", bg = "#45475a" }
+
+mode_normal = { fg = "#1e1e2e", bg = "#89b4fa", bold = true }
+mode_select = { fg = "#1e1e2e", bg = "#a6e3a1", bold = true }
+mode_unset = { fg = "#1e1e2e", bg = "#f38ba8", bold = true }
+
+progress_label = { fg = "#cdd6f4", bold = true }
+progress_normal = { fg = "#89b4fa", bg = "#45475a" }
+progress_error = { fg = "#f38ba8", bg = "#45475a" }
+
+permissions_t = { fg = "#a6e3a1" }
+permissions_r = { fg = "#f9e2af" }
+permissions_w = { fg = "#f38ba8" }
+permissions_x = { fg = "#89b4fa" }
+permissions_s = { fg = "#cba6f7" }
+
+[input]
+border = { fg = "#89b4fa" }
+title = { fg = "#cdd6f4" }
+value = { fg = "#fab387" }
+selected = { reversed = true }
+
+[pick]
+border = { fg = "#89b4fa" }
+active = { fg = "#cba6f7", bold = true }
+inactive = { fg = "#6c7086" }
+
+[confirm]
+border = { fg = "#f38ba8" }
+title = { fg = "#cdd6f4" }
+content = { fg = "#cdd6f4" }
+
+[tasks]
+border = { fg = "#89b4fa" }
+title = { fg = "#cdd6f4" }
+hovered = { fg = "#cba6f7", underline = true }
+
+[help]
+on = { fg = "#cba6f7" }
+run = { fg = "#94e2d5" }
+desc = { fg = "#a6e3a1" }
+hovered = { reversed = true, bold = true }
+footer = { fg = "#6c7086", bg = "#1e1e2e" }
+
+[filetype]
+rules = [
+    { name = "*.rs", fg = "#fab387", bold = true },
+    { name = "*.py", fg = "#f9e2af", bold = true },
+    { name = "*.{js,ts,jsx,tsx}", fg = "#f9e2af" },
+    { name = "*.{c,cpp}", fg = "#89b4fa" },
+    { name = "*.go", fg = "#74c7ec" },
+    { name = "*.{sh,bash}", fg = "#a6e3a1" },
+    { name = "*.lua", fg = "#89b4fa" },
+    { name = "*.md", fg = "#89dceb", bold = true },
+    { name = "*.{pdf,epub}", fg = "#f38ba8" },
+    { mime = "image/*", fg = "#f5c2e7" },
+    { mime = "video/*", fg = "#fab387" },
+    { mime = "audio/*", fg = "#94e2d5" },
+    { name = "*.{zip,rar,7z,tar,gz}", fg = "#f38ba8" },
+]
+
+[icon]
+cwd = ""
+file = ""
+folder = ""

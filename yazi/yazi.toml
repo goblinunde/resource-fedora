@@ -222,15 +222,25 @@ preloaders = [
 
 # ----- 预览器配置 (Previewers) - 使用 piper.yazi 增强预览 -----
 # 💡 prepend_previewers: 优先级最高,会覆盖默认预览器
+
 [[plugin.prepend_previewers]]
-# Markdown 预览 - 使用 glow 渲染
+# Markdown 预览 - 使用 glow 增强渲染
+# 💡 高级特性:
+# - 完整语法高亮
+# - 代码块美化
+# - 表格渲染
+# - Emoji 支持
+# - 链接高亮
 url = "*.md"
-run = 'piper -- CLICOLOR_FORCE=1 glow -w=$w -s=dark "$1"'
+run = '''piper -- sh -c 'glow -w $w -s dark \
+    --style=dark \
+    --width=$w \
+    "$1"' -- '''
 
 [[plugin.prepend_previewers]]
 # CSV 预览 - 使用 bat 语法高亮
 url = "*.csv"
-run = 'piper -- bat -p --color=always "$1"'
+run = 'piper -- bat -p --color=always --style=numbers,grid "$1"'
 
 [[plugin.prepend_previewers]]
 # Tarball 预览 - 显示压缩包内容

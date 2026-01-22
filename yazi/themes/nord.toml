@@ -1,0 +1,118 @@
+# Yazi 主题配置 - Nord
+# 极地配色方案，冷色调
+
+"$schema" = "https://yazi-rs.github.io/schemas/theme.json"
+
+[flavor]
+use = "nord"
+
+# ===== Nord 调色板 =====
+# Polar Night
+# nord0: #2e3440
+# nord1: #3b4252
+# nord2: #434c5e
+# nord3: #4c566a
+# Snow Storm
+# nord4: #d8dee9
+# nord5: #e5e9f0
+# nord6: #eceff4
+# Frost
+# nord7: #8fbcbb (cyan)
+# nord8: #88c0d0 (bright cyan)
+# nord9: #81a1c1 (blue)
+# nord10: #5e81ac (dark blue)
+# Aurora
+# nord11: #bf616a (red)
+# nord12: #d08770 (orange)
+# nord13: #ebcb8b (yellow)
+# nord14: #a3be8c (green)
+# nord15: #b48ead (purple)
+
+[manager]
+cwd = { fg = "#88c0d0", bold = true }
+hovered = { reversed = true }
+preview_hovered = { underline = true }
+
+find_keyword = { fg = "#ebcb8b", bold = true, italic = true, underline = true }
+find_position = { fg = "#b48ead", bg = "reset", bold = true }
+
+marker_copied = { fg = "#a3be8c", bg = "#a3be8c" }
+marker_cut = { fg = "#bf616a", bg = "#bf616a" }
+marker_marked = { fg = "#8fbcbb", bg = "#8fbcbb" }
+marker_selected = { fg = "#ebcb8b", bg = "#ebcb8b" }
+
+tab_active = { fg = "#2e3440", bg = "#88c0d0", bold = true }
+tab_inactive = { fg = "#4c566a", bg = "#3b4252" }
+tab_width = 1
+
+border_symbol = "│"
+border_style = { fg = "#434c5e" }
+
+[status]
+separator_open = ""
+separator_close = ""
+separator_style = { fg = "#434c5e", bg = "#434c5e" }
+
+mode_normal = { fg = "#2e3440", bg = "#88c0d0", bold = true }
+mode_select = { fg = "#2e3440", bg = "#a3be8c", bold = true }
+mode_unset = { fg = "#2e3440", bg = "#bf616a", bold = true }
+
+progress_label = { fg = "#d8dee9", bold = true }
+progress_normal = { fg = "#88c0d0", bg = "#434c5e" }
+progress_error = { fg = "#bf616a", bg = "#434c5e" }
+
+permissions_t = { fg = "#a3be8c" }
+permissions_r = { fg = "#ebcb8b" }
+permissions_w = { fg = "#bf616a" }
+permissions_x = { fg = "#81a1c1" }
+permissions_s = { fg = "#b48ead" }
+
+[input]
+border = { fg = "#88c0d0" }
+title = { fg = "#d8dee9" }
+value = { fg = "#d08770" }
+selected = { reversed = true }
+
+[pick]
+border = { fg = "#88c0d0" }
+active = { fg = "#b48ead", bold = true }
+inactive = { fg = "#4c566a" }
+
+[confirm]
+border = { fg = "#bf616a" }
+title = { fg = "#d8dee9" }
+content = { fg = "#d8dee9" }
+
+[tasks]
+border = { fg = "#88c0d0" }
+title = { fg = "#d8dee9" }
+hovered = { fg = "#b48ead", underline = true }
+
+[help]
+on = { fg = "#b48ead" }
+run = { fg = "#8fbcbb" }
+desc = { fg = "#a3be8c" }
+hovered = { reversed = true, bold = true }
+footer = { fg = "#4c566a", bg = "#2e3440" }
+
+[filetype]
+rules = [
+    { name = "*.rs", fg = "#d08770", bold = true },
+    { name = "*.py", fg = "#ebcb8b", bold = true },
+    { name = "*.{js,ts}", fg = "#ebcb8b" },
+    { name = "*.{c,cpp}", fg = "#81a1c1" },
+    { name = "*.go", fg = "#8fbcbb" },
+    { name = "*.{sh,bash}", fg = "#a3be8c" },
+    { name = "*.lua", fg = "#81a1c1" },
+    { name = "*.md", fg = "#88c0d0", bold = true },
+    { name = "*.{pdf,epub}", fg = "#bf616a" },
+    { mime = "image/*", fg = "#b48ead" },
+    { mime = "video/*", fg = "#d08770" },
+    { mime = "audio/*", fg = "#8fbcbb" },
+    { name = "*.{zip,rar,7z}", fg = "#bf616a" },
+]
+
+[icon]
+cwd = ""
+file = ""
+folder = ""
