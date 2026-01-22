@@ -2,6 +2,19 @@
 #
 # version = "0.99.1"
 
+# ============================================================================
+# Load Tokyo Night Theme
+# ============================================================================
+use themes/tokyo-night.nu *
+
+# ============================================================================
+# Load Utility Functions
+# ============================================================================
+use scripts/utils.nu *
+
+# ============================================================================
+# Theme Definitions
+# ============================================================================
 # For more information on defining custom themes, see
 # https://www.nushell.sh/book/coloring_and_theming.html
 # And here is the theme collection
@@ -234,7 +247,7 @@ $env.config = {
         vi_normal: underscore # block, underscore, line, blink_block, blink_underscore, blink_line, inherit to skip setting cursor shape (underscore is the default)
     }
 
-    color_config: $dark_theme # if you want a more interesting theme, you can replace the empty record with `$dark_theme`, `$light_theme` or another custom record
+    color_config: (tokyo_night_theme) # Use Tokyo Night theme
     footer_mode: 25 # always, never, number_of_rows, auto
     float_precision: 2 # the precision for displaying floats in tables
     buffer_editor: null # command that will be used to edit the current line buffer with ctrl+o, if unset fallback to $env.EDITOR and $env.VISUAL

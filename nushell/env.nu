@@ -2,7 +2,39 @@
 #
 # version = "0.99.1"
 
-def create_left_prompt [] {
+# ============================================================================
+# Starship Prompt Integration (Tokyo Night Theme)
+# ============================================================================
+mkdir ~/.cache/starship
+starship init nu | save -f ~/.cache/starship/init.nu
+
+# Set Starship config path to use Tokyo Night theme
+$env.STARSHIP_CONFIG = ($nu.default-config-dir | path join ".." "tokyo-night.toml")
+
+# ============================================================================
+# Common Environment Variables
+# ============================================================================
+$env.EDITOR = "nvim"
+$env.VISUAL = "nvim"
+$env.PAGER = "less"
+$env.LESS = "-R"
+
+# Use bat for man pages if available
+if (which bat | is-not-empty) {
+    $env.MANPAGER = "sh -c 'col -bx | bat -l man -p'"
+}
+
+# ============================================================================
+# PATH Configuration 
+# ============================================================================
+# Add common development paths
+$env.PATH = ($env.PATH | split row (char esep) | prepend [
+    ($env.HOME | path join ".local" "bin")
+    ($env.HOME | path join ".cargo" "bin")
+    "/usr/local/bin"
+])
+
+
     let dir = match (do --ignore-shell-errors { $env.PWD | path relative-to $nu.home-path }) {
         null => $env.PWD
         '' => '~'
@@ -99,3 +131,8 @@ $env.NU_PLUGIN_DIRS = [
 
 # To load from a custom file you can use:
 # source ($nu.default-config-dir | path join 'custom.nu')
+
+# ============================================================================
+# Load Starship Prompt
+# ============================================================================
+source ~/.cache/starship/init.nu
