@@ -174,7 +174,37 @@ cd resource-fedora
 
 ### 使用配置脚本
 
-#### 📦 一键全量配置 (推荐初次使用)
+#### 🎯 使用 Makefile (推荐)
+
+本仓库提供了 **Makefile** 来简化配置管理，使用更加方便：
+
+```bash
+# 查看所有可用命令
+make help
+
+# 一键部署所有配置
+make install
+
+# 部署特定模块
+make deploy-zsh
+make deploy-nvim
+
+# 检查配置完整性
+make check
+
+# 查看项目信息
+make info
+```
+
+**Makefile 提供的功能**：
+
+- 📦 **部署命令** - 一键或模块化部署配置
+- 📚 **文档查看** - 快速查看 README 和文档列表
+- 🔧 **维护工具** - 检查、清理、备份、更新
+- 🧪 **测试验证** - Shell 语法测试、Shellcheck 检查
+- ℹ️  **系统信息** - 项目统计、版本信息
+
+#### 📦 直接使用 setup.sh (传统方式)
 
 ```bash
 bash setup.sh --all
