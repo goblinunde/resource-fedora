@@ -112,32 +112,57 @@ copy_config_files() {
         print_success "已复制: init.lua"
 }
 
+# 💡 安装单个插件的辅助函数
+install_plugin_if_missing() {
+    local plugin_name="$1"
+    local plugin_path="$2"
+    
+    if ya pkg list 2>/dev/null | grep -q "$plugin_name"; then
+        print_info "$plugin_name 已安装"
+    else
+        print_info "安装 $plugin_name..."
+        if ya pkg add "$plugin_path" 2>/dev/null; then
+            print_success "已安装: $plugin_name"
+        else
+            print_warning "安装失败: $plugin_name"
+        fi
+    fi
+}
+
 # 💡 安装插件
 install_plugins() {
     if ! command_exists ya; then
         print_warning "ya (Yazi 包管理器) 未找到,跳过插件安装"
+        print_info "安装 ya: cargo install yazi-cli"
         return
     fi
     
-    print_info "安装插件..."
+    print_info "安装 Yazi 插件..."
     
-    # 安装 piper.yazi
-    if ya pkg list | grep -q "piper.yazi"; then
-        print_info "piper.yazi 已安装"
-    else
-        print_info "安装 piper.yazi..."
-        ya pkg add yazi-rs/plugins:piper && \
-            print_success "已安装: piper.yazi"
-    fi
+    # 基础插件
+    install_plugin_if_missing "piper.yazi" "yazi-rs/plugins:piper"
+    install_plugin_if_missing "mux.yazi" "yazi-rs/plugins:mux"
     
-    # 安装 mux.yazi
-    if ya pkg list | grep -q "mux.yazi"; then
-        print_info "mux.yazi 已安装"
-    else
-        print_info "安装 mux.yazi..."
-        ya pkg add peterfication/mux && \
-            print_success "已安装: mux.yazi"
-    fi
+    # 高级预览插件
+    # 注意: 这些插件可能需要额外的依赖工具
+    print_info "安装高级预览插件..."
+    
+    # Rich 预览 (需要 rich-cli)
+    install_plugin_if_missing "rich-preview.yazi" "Reledia/rich-preview.yazi"
+    
+    # Jupyter Notebook 预览 (需要 nbpreview)
+    install_plugin_if_missing "nbpreview.yazi" "AnirudhG07/nbpreview.yazi"
+    
+    # DuckDB 数据预览 (需要 duckdb)
+    install_plugin_if_missing "duckdb.yazi" "hankertrix/duckdb.yazi"
+    
+    # 音频元数据预览 (需要 exiftool)
+    install_plugin_if_missing "exifaudio.yazi" "Sonico98/exifaudio.yazi"
+    
+    # 媒体信息预览 (需要 mediainfo)
+    install_plugin_if_missing "mediainfo.yazi" "Ape/mediainfo.yazi"
+    
+    print_success "插件安装完成"
 }
 
 # 💡 检查依赖
@@ -145,8 +170,10 @@ check_dependencies() {
     print_info "检查依赖工具..."
     
     local missing_tools=()
+    local missing_optional=()
+    local missing_python=()
     
-    # 必需工具
+    # 💡 基础必需工具 (Yazi 核心功能)
     local required_tools=("bat" "glow" "eza" "hexyl")
     for tool in "${required_tools[@]}"; do
         if ! command_exists "$tool"; then
@@ -154,28 +181,38 @@ check_dependencies() {
         fi
     done
     
-    # 可选工具
-    local optional_tools=("mediainfo" "exiftool" "fd" "rg" "fzf" "zoxide" "sqlite3")
-    local missing_optional=()
+    # 💡 预览增强工具 (强烈推荐)
+    local preview_tools=("pdftoppm" "pdftotext" "exiftool" "ffmpeg" "mediainfo" "duckdb" "sqlite3")
+    local missing_preview=()
+    for tool in "${preview_tools[@]}"; do
+        if ! command_exists "$tool"; then
+            missing_preview+=("$tool")
+        fi
+    done
+    
+    # 💡 Python 工具 (通过 uv 安装)
+    local python_tools=("rich" "nbpreview")
+    for tool in "${python_tools[@]}"; do
+        if ! command_exists "$tool"; then
+            missing_python+=("$tool")
+        fi
+    done
+    
+    # 💡 可选增强工具
+    local optional_tools=("fd" "rg" "fzf" "zoxide" "jq")
     for tool in "${optional_tools[@]}"; do
         if ! command_exists "$tool"; then
             missing_optional+=("$tool")
         fi
     done
     
-    # PDF 预览工具
-    if ! command_exists pdftoppm; then
-        missing_tools+=("poppler-utils")
-    fi
-    
-    # 报告缺失工具
+    # 💡 报告缺失的基础工具
     if [ ${#missing_tools[@]} -gt 0 ]; then
-        print_warning "缺少以下必需工具: ${missing_tools[*]}"
+        print_warning "缺少以下基础工具: ${missing_tools[*]}"
         read -p "是否安装这些工具? (y/n): " -n 1 -r
         echo
         if [[ $REPLY =~ ^[Yy]$ ]]; then
             if command_exists dnf; then
-                # 构建安装命令
                 local install_cmd="sudo dnf install -y"
                 for tool in "${missing_tools[@]}"; do
                     case $tool in
@@ -188,22 +225,89 @@ check_dependencies() {
                             fi
                             ;;
                         "hexyl") install_cmd="$install_cmd hexyl" ;;
-                        "poppler-utils") install_cmd="$install_cmd poppler-utils" ;;
                     esac
                 done
                 eval "$install_cmd"
-                print_success "必需工具安装完成"
+                print_success "基础工具安装完成"
             fi
         fi
     else
-        print_success "所有必需工具已安装"
+        print_success "所有基础工具已安装"
     fi
     
+    # 💡 报告缺失的预览工具
+    if [ ${#missing_preview[@]} -gt 0 ]; then
+        print_warning "缺少以下预览增强工具: ${missing_preview[*]}"
+        print_info "这些工具将增强 PDF、音频、视频等文件的预览体验"
+        read -p "是否安装这些工具? (y/n): " -n 1 -r
+        echo
+        if [[ $REPLY =~ ^[Yy]$ ]]; then
+            if command_exists dnf; then
+                # 构建 Fedora 安装命令
+                local preview_install_cmd="sudo dnf install -y"
+                for tool in "${missing_preview[@]}"; do
+                    case $tool in
+                        "pdftoppm"|"pdftotext") preview_install_cmd="$preview_install_cmd poppler-utils" ;;
+                        "exiftool") preview_install_cmd="$preview_install_cmd perl-Image-ExifTool" ;;
+                        "ffmpeg") preview_install_cmd="$preview_install_cmd ffmpeg" ;;
+                        "mediainfo") preview_install_cmd="$preview_install_cmd mediainfo" ;;
+                        "duckdb") preview_install_cmd="$preview_install_cmd duckdb" ;;
+                        "sqlite3") preview_install_cmd="$preview_install_cmd sqlite" ;;
+                    esac
+                done
+                eval "$preview_install_cmd"
+                print_success "预览工具安装完成"
+            fi
+        fi
+    else
+        print_success "所有预览增强工具已安装"
+    fi
+    
+    # 💡 报告缺失的 Python 工具
+    if [ ${#missing_python[@]} -gt 0 ]; then
+        print_warning "缺少以下 Python 工具: ${missing_python[*]}"
+        echo
+        print_info "这些工具用于高级预览功能:"
+        echo "  - rich: 美化 Markdown/JSON/CSV 预览"
+        echo "  - nbpreview: Jupyter Notebook 预览"
+        echo
+        if command_exists uv; then
+            read -p "是否使用 uv 安装这些工具? (y/n): " -n 1 -r
+            echo
+            if [[ $REPLY =~ ^[Yy]$ ]]; then
+                for tool in "${missing_python[@]}"; do
+                    print_info "安装 $tool..."
+                    case $tool in
+                        "rich") uv tool install rich-cli ;;
+                        "nbpreview") uv tool install nbpreview ;;
+                    esac
+                done
+                print_success "Python 工具安装完成"
+            fi
+        else
+            print_info "建议安装 uv 包管理器: curl -LsSf https://astral.sh/uv/install.sh | sh"
+            echo
+            print_info "或使用以下命令手动安装:"
+            for tool in "${missing_python[@]}"; do
+                case $tool in
+                    "rich") echo "  uv tool install rich-cli" ;;
+                    "nbpreview") echo "  uv tool install nbpreview" ;;
+                esac
+            done
+        fi
+    else
+        print_success "所有 Python 工具已安装"
+    fi
+    
+    # 💡 报告可选工具
     if [ ${#missing_optional[@]} -gt 0 ]; then
         print_info "缺少以下可选工具: ${missing_optional[*]}"
         print_info "这些工具可通过以下命令安装:"
         echo "  sudo dnf install ${missing_optional[*]}"
     fi
+    
+    echo
+    print_success "依赖检查完成"
 }
 
 # 💡 主函数
