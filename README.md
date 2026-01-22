@@ -1,6 +1,316 @@
-# resource-fedora
+# 🚀 Fedora 43 Configuration Repository
 
-1. 该仓库主要基于Fedora43 系统下,个人重新打包或者网上找到的资源
-2. 还有一个就是个人的一些Linux系统的配置,包括对zsh,bash,tmux,以及一些 nix的配置
-3. 还有一些sh脚本或者ps1脚本
+> 基于 **Fedora 43 Workstation Edition (GNOME 49 + Wayland)** 的个人系统配置文件集合  
+> 包含 Shell 配置、编辑器配置、开发工具配置和快速部署脚本
 
+![Fedora](https://img.shields.io/badge/Fedora-43-blue?logo=fedora)
+![Shell](https://img.shields.io/badge/Shell-Bash%20%7C%20Zsh%20%7C%20Fish%20%7C%20Nushell-green)
+![Editor](https://img.shields.io/badge/Editor-Neovim%20%7C%20Vim-brightgreen?logo=neovim)
+![License](https://img.shields.io/badge/License-MIT-orange)
+
+---
+
+## ✨ 特性
+
+- 🎨 **统一美化主题** - 采用 Tokyo Night 配色方案，跨 Shell 和编辑器统一视觉体验
+- 🐚 **多 Shell 支持** - 提供 Bash、Zsh、Fish 和 Nushell 的完整配置
+- ⚡ **现代化工具链** - 集成 Starship、bat、lsd、fd、rg 等现代 CLI 工具
+- 📝 **强大编辑器配置** - LazyVim 定制化 Neovim 配置，支持 Python、Rust、LaTeX 开发
+- 🔧 **一键部署脚本** - 支持全量配置和模块化分别配置
+- 💾 **自动备份** - 配置部署前自动备份现有配置文件
+
+---
+
+## 📁 目录结构
+
+```
+resource-fedora/
+├── 📄 Shell 配置文件
+│   ├── .bashrc              # Bash shell 配置
+│   ├── .zshrc               # Zsh shell 配置 (主力)
+│   ├── fish/                # Fish shell 配置目录
+│   │   ├── config.fish      # Fish 主配置文件
+│   │   ├── fish_variables   # Fish 环境变量
+│   │   ├── completions/     # 自定义补全脚本
+│   │   ├── conf.d/          # 配置片段目录
+│   │   └── functions/       # 自定义函数目录
+│   └── nushell/             # Nushell 配置目录
+│       ├── config.nu        # Nushell 主配置文件
+│       ├── env.nu           # Nushell 环境配置
+│       └── history.txt      # 命令历史
+│
+├── 🎨 主题与终端
+│   ├── tokyo-night.toml     # Starship Tokyo Night 主题配置
+│   └── .tmux.conf           # Tmux 终端复用器配置
+│
+├── ✏️ 编辑器配置
+│   ├── .vimrc               # Vim 编辑器配置
+│   └── nvim/                # Neovim (LazyVim) 配置目录
+│       ├── init.lua         # Neovim 入口配置
+│       ├── lua/             # Lua 配置模块
+│       ├── docs/            # 文档目录
+│       └── README.md        # LazyVim 配置说明
+│
+├── 🔧 开发工具配置
+│   ├── .gitconfig           # Git 全局配置 (含 LFS、代理)
+│   ├── .condarc             # Conda 包管理器配置
+│   └── ruff/                # Ruff Python linter 配置
+│       └── ruff-receipt.json
+│
+├── 📜 脚本与文档
+│   ├── setup.sh             # 系统配置部署脚本 (一键/分别配置)
+│   ├── GEMINI.md            # AI 助手行为准则配置
+│   └── README.md            # 本文档
+│
+└── .gitignore               # Git 忽略规则
+```
+
+---
+
+## 🚀 快速开始
+
+### 前置要求
+
+确保你的系统满足以下条件：
+
+```bash
+# 检查系统版本
+cat /etc/fedora-release  # 应显示 Fedora Linux 43
+
+# 安装 Git (如未安装)
+sudo dnf install -y git
+
+# (可选) 安装现代化 CLI 工具
+sudo dnf install -y bat lsd fd-find ripgrep starship
+```
+
+### 克隆仓库
+
+```bash
+cd ~/Documents/Github
+git clone https://github.com/goblinunde/resource-fedora.git
+cd resource-fedora
+```
+
+### 使用配置脚本
+
+#### 📦 一键全量配置 (推荐初次使用)
+
+```bash
+bash setup.sh --all
+```
+
+此命令将自动部署：
+
+- Shell 配置 (Bash/Zsh/Fish/Nushell)
+- Tmux 配置
+- Vim/Neovim 配置
+- Git 配置
+- Starship 主题
+
+#### 🔧 分别配置 (模块化选择)
+
+```bash
+# 仅配置 Shell
+bash setup.sh --shell bash   # 或 zsh/fish/nushell
+
+# 仅配置编辑器
+bash setup.sh --editor vim   # 或 nvim
+
+# 仅配置 Tmux
+bash setup.sh --tmux
+
+# 仅配置 Git
+bash setup.sh --git
+
+# 仅配置 Starship
+bash setup.sh --starship
+```
+
+#### 📋 查看帮助
+
+```bash
+bash setup.sh --help
+```
+
+---
+
+## 📝 配置文件详解
+
+### Shell 配置
+
+#### Bash (`.bashrc`)
+
+- **用途**: 默认系统 Shell 配置
+- **特性**: 基础别名、路径配置
+- **适用场景**: 系统脚本、兼容性需求
+
+#### Zsh (`.zshrc`)
+
+- **用途**: 主力 Shell 配置 (13KB+ 高度定制)
+- **特性**:
+  - Oh-My-Zsh 框架集成
+  - Starship 提示符
+  - 丰富的插件和主题
+  - 智能补全和历史记录
+- **适用场景**: 日常开发、交互式使用
+
+#### Fish (`fish/config.fish`)
+
+- **用途**: 现代化友好 Shell
+- **特性**:
+  - 开箱即用的自动补全
+  - 语法高亮
+  - Web 配置界面 (`fish_config`)
+- **适用场景**: 新手友好、快速配置
+
+#### Nushell (`nushell/config.nu`)
+
+- **用途**: 结构化数据处理 Shell
+- **特性**:
+  - 数据管道优先设计
+  - 内置表格处理
+  - 跨平台一致性
+- **适用场景**: 数据处理、系统管理
+
+### 编辑器配置
+
+#### Vim (`.vimrc`)
+
+- **大小**: 15KB+
+- **特性**:
+  - 插件管理器集成
+  - 语法高亮和补全
+  - 自定义快捷键
+- **适用场景**: 服务器环境、轻量级编辑
+
+#### Neovim (`nvim/`)
+
+- **框架**: LazyVim
+- **特性**:
+  - LSP 语言服务器支持 (Python/Rust/LaTeX)
+  - 多主题自动切换 (12+ 主题)
+  - 文件预览功能
+  - Git 集成
+  - 详细文档 (见 `nvim/README.md`)
+- **适用场景**: 现代化开发环境
+
+### Tmux 配置 (`.tmux.conf`)
+
+- **大小**: 7.6KB
+- **特性**:
+  - TPM 插件管理器
+  - 自定义状态栏
+  - 快捷键优化
+  - 鼠标支持
+- **适用场景**: 终端复用、远程会话管理
+
+### Git 配置 (`.gitconfig`)
+
+- **用户**: `SMLYFM <yytcjx@gmail.com>`
+- **特性**:
+  - Git LFS 支持
+  - 代理配置 (SOCKS5)
+  - 默认分支: `main`
+- **注意**: 部署前需根据个人信息修改
+
+### Starship 主题 (`tokyo-night.toml`)
+
+- **配色**: Tokyo Night
+- **显示模块**: 目录、Git、语言版本、时间
+- **支持语言**: Node.js、Rust、Go、PHP
+- **Nerd Font**: 需要安装 Nerd Font 字体支持图标
+
+---
+
+## 🔄 配置备份
+
+脚本会自动备份现有配置到 `~/.config-backup-<timestamp>/`：
+
+```bash
+ls ~/.config-backup-*
+# 示例: ~/.config-backup-20260122-213000/
+```
+
+恢复备份：
+
+```bash
+# 恢复单个文件
+cp ~/.config-backup-<timestamp>/.zshrc ~/.zshrc
+
+# 恢复所有配置
+cp -r ~/.config-backup-<timestamp>/.* ~/
+```
+
+---
+
+## 🛠️ 高级定制
+
+### 修改 Starship 主题
+
+```bash
+# 编辑主题配置
+vim ~/Documents/Github/resource-fedora/tokyo-night.toml
+
+# 重新应用
+bash setup.sh --starship
+```
+
+### 添加自定义 Fish 函数
+
+```bash
+# 在 fish/functions/ 目录创建函数文件
+echo "function myfunction
+    echo 'Hello, Fish!'
+end" > fish/functions/myfunction.fish
+
+# 重新部署
+bash setup.sh --shell fish
+```
+
+### 扩展 LazyVim 插件
+
+```bash
+cd nvim/lua/plugins
+# 添加新插件配置 (参考 nvim/README.md)
+```
+
+---
+
+## 🤝 贡献指南
+
+欢迎提交 Issue 和 Pull Request！
+
+1. Fork 本仓库
+2. 创建特性分支 (`git checkout -b feature/AmazingFeature`)
+3. 提交更改 (`git commit -m 'Add some AmazingFeature'`)
+4. 推送到分支 (`git push origin feature/AmazingFeature`)
+5. 开启 Pull Request
+
+---
+
+## 📄 许可证
+
+本项目采用 MIT 许可证 - 详见 [LICENSE](LICENSE) 文件
+
+---
+
+## 📮 联系方式
+
+**作者**: SMLYFM  
+**邮箱**: <yytcjx@gmail.com>  
+**GitHub**: [@goblinunde](https://github.com/goblinunde)
+
+---
+
+## 🙏 致谢
+
+- [Starship](https://starship.rs/) - 跨 Shell 提示符
+- [LazyVim](https://www.lazyvim.org/) - Neovim 配置框架
+- [Tokyo Night](https://github.com/tokyo-night/tokyo-night-vscode-theme) - 配色方案
+- [Oh-My-Zsh](https://ohmyz.sh/) - Zsh 配置框架
+- Fedora 开源社区
+
+---
+
+**⭐ 如果这个项目对你有帮助，请给个 Star！**
