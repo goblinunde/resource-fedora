@@ -264,7 +264,7 @@ run = 'piper -- sqlite3 "$1" ".schema --indent"'
 # 💡 依赖: poppler-utils (pdftoppm)
 # 💡 功能: 渲染 PDF 第一页为高质量图片预览
 mime = "application/pdf"
-run = 'piper -- sh -c ''pdftoppm -f 1 -l 1 -scale-to-x 1920 -scale-to-y -1 -singlefile -jpeg -tiffcompression jpeg "$1" - 2>/dev/null | cat'''
+run = '''piper -- sh -c 'pdftoppm -f 1 -l 1 -scale-to-x 1920 -scale-to-y -1 -singlefile -jpeg -tiffcompression jpeg "$1" - 2>/dev/null | cat' '''
 
 [[plugin.prepend_previewers]]
 # Markdown 美化预览 - 使用 rich-cli (备选: glow)
