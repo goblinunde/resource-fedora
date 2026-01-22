@@ -896,3 +896,167 @@ $env.config = {
         }
     ]
 }
+# =============================================================================
+# 自定义配置 - Fedora 43 优化版
+# 作者: SMLYFM <yytcjx@gmail.com>
+# =============================================================================
+
+# ========================================================================
+# Starship 提示符初始化 (Tokyo Night 主题)
+# ========================================================================
+# 💡 使用本地配置目录下的 tokyo-night.toml
+$env.STARSHIP_CONFIG = ($nu.default-config-dir | path join 'tokyo-night.toml')
+
+# 初始化 Starship (如果已安装)
+if (which starship | is-not-empty) {
+    $env.STARSHIP_SHELL = "nu"
+    
+    def create_left_prompt [] {
+        starship prompt --cmd-duration $env.CMD_DURATION_MS --status $env.LAST_EXIT_CODE
+    }
+    
+    def create_right_prompt [] {
+        starship prompt --right --cmd-duration $env.CMD_DURATION_MS --status $env.LAST_EXIT_CODE
+    }
+    
+    # 覆盖默认提示符
+    $env.PROMPT_COMMAND = { || create_left_prompt }
+    $env.PROMPT_COMMAND_RIGHT = { || create_right_prompt }
+}
+
+# ========================================================================
+# 常用别名
+# ========================================================================
+
+# ls 相关 (使用 lsd 或 exa)
+if (which lsd | is-not-empty) {
+    alias ls = lsd
+    alias ll = lsd -lh
+    alias la = lsd -lAh
+    alias lt = lsd --tree
+} else if (which exa | is-not-empty) {
+    alias ls = exa
+    alias ll = exa -lh
+    alias la = exa -lah
+    alias lt = exa --tree
+}
+
+# cat 替代 (bat)
+if (which bat | is-not-empty) {
+    alias cat = bat --paging=never
+    alias ccat = bat --paging=always
+}
+
+# find 替代 (fd)
+if (which fd | is-not-empty) {
+    alias find = fd
+}
+
+# grep 替代 (ripgrep)
+if (which rg | is-not-empty) {
+    alias grep = rg
+}
+
+# DNF 包管理器
+alias dnfi = sudo dnf install
+alias dnfu = sudo dnf update
+alias dnfr = sudo dnf remove
+alias dnfs = dnf search
+alias dnfinfo = dnf info
+
+# Git 快捷命令
+alias g = git
+alias gs = git status
+alias ga = git add
+alias gc = git commit
+alias gp = git push
+alias gl = git log --oneline --graph --decorate
+alias gd = git diff
+
+# 快速导航
+alias .. = cd ..
+alias ... = cd ../..
+alias .... = cd ../../..
+
+# Python 开发
+alias py = python3
+alias venv = python3 -m venv
+
+# Tmux
+alias t = tmux
+alias ta = tmux attach
+alias tl = tmux list-sessions
+
+# ========================================================================
+# 自定义命令
+# ========================================================================
+
+# mkcd - 创建目录并进入
+def mkcd [dir: string] {
+    mkdir $dir
+    cd $dir
+}
+
+# backup - 快速备份文件
+def backup [file: path] {
+    let timestamp = (date now | format date "%Y%m%d-%H%M%S")
+    cp -r $file $"($file).backup.($timestamp)"
+    print $"已备份: ($file) -> ($file).backup.($timestamp)"
+}
+
+# ports - 显示占用端口的进程
+def ports [] {
+    if (which lsof | is-not-empty) {
+        sudo lsof -i -P -n | grep LISTEN
+    } else if (which netstat | is-not-empty) {
+        sudo netstat -tulpn | grep LISTEN
+    } else {
+        print "需要 lsof 或 netstat 命令"
+    }
+}
+
+# sysup - 系统更新
+def sysup [] {
+    sudo dnf update -y
+    sudo dnf autoremove -y
+    print "系统更新完成！"
+}
+
+# weather - 天气查询 (使用 wttr.in)
+def weather [city?: string = ""] {
+    if ($city == "") {
+        http get "https://wttr.in?format=3"
+    } else {
+        http get $"https://wttr.in/($city)?format=3"
+    }
+}
+
+# myip - 显示公网 IP
+def myip [] {
+    http get "https://api.ipify.org"
+}
+
+# ========================================================================
+# 环境变量增强
+# ========================================================================
+
+# 设置编辑器
+$env.EDITOR = "nvim"
+$env.VISUAL = "nvim"
+
+# 添加常用路径到 PATH (如果存在)
+let custom_paths = [
+    ($env.HOME | path join ".local" "bin"),
+    ($env.HOME | path join ".cargo" "bin"),
+]
+
+for path in $custom_paths {
+    if ($path | path exists) {
+        $env.PATH = ($env.PATH | split row (char esep) | prepend $path | uniq)
+    }
+}
+
+# ========================================================================
+# 完成配置
+# ========================================================================
+print "🎉 Nushell 配置加载完成 (Tokyo Night + Starship)"
