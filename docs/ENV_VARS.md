@@ -370,6 +370,72 @@ set -Ux NVM_DIR "$HOME/.nvm"
 
 ## 包管理器配置
 
+### Homebrew 环境变量
+
+```bash
+# Bash/Zsh
+# Homebrew 自动配置 (安装后添加)
+eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+
+# 这会设置以下环境变量:
+export HOMEBREW_PREFIX="/home/linuxbrew/.linuxbrew"
+export HOMEBREW_CELLAR="/home/linuxbrew/.linuxbrew/Cellar"
+export HOMEBR EW_REPOSITORY="/home/linuxbrew/.linuxbrew/Homebrew"
+export PATH="/home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.linuxbrew/sbin:$PATH"
+
+# 镜像加速 (可选)
+export HOMEBREW_BREW_GIT_REMOTE="https://mirrors.tuna.tsinghua.edu.cn/git/homebrew/brew.git"
+export HOMEBREW_CORE_GIT_REMOTE="https://mirrors.tuna.tsinghua.edu.cn/git/homebrew/homebrew-core.git"
+export HOMEBREW_BOTTLE_DOMAIN="https://mirrors.tuna.tsinghua.edu.cn/homebrew-bottles"
+
+# 其他有用的配置
+export HOMEBREW_NO_AUTO_UPDATE=1            # 禁用自动更新
+export HOMEBREW_NO_ANALYTICS=1              # 禁用数据收集
+```
+
+**Fish**:
+
+```fish
+# Homebrew 配置
+eval (/home/linuxbrew/.linuxbrew/bin/brew shellenv)
+
+# 镜像加速
+set -Ux HOMEBREW_BREW_GIT_REMOTE "https://mirrors.tuna.tsinghua.edu.cn/git/homebrew/brew.git"
+set -Ux HOMEBREW_CORE_GIT_REMOTE "https://mirrors.tuna.tsinghua.edu.cn/git/homebrew/homebrew-core.git"
+set -Ux HOMEBREW_BOTTLE_DOMAIN "https://mirrors.tuna.tsinghua.edu.cn/homebrew-bottles"
+```
+
+### Nix 环境变量
+
+```bash
+# Bash/Zsh
+# 单用户模式
+if [ -e ~/.nix-profile/etc/profile.d/nix.sh ]; then
+  . ~/.nix-profile/etc/profile.d/nix.sh
+fi
+
+# 多用户模式
+if [ -e /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh ]; then
+  . /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
+fi
+
+# Nix 相关变量 (由 nix.sh 自动设置)
+export NIX_PATH="$HOME/.nix-defexpr/channels"
+export NIX_SSL_CERT_FILE="/etc/ssl/certs/ca-certificates.crt"
+
+# PATH (由 Nix 自动添加)
+export PATH="$HOME/.nix-profile/bin:$PATH"
+```
+
+**Fish**:
+
+```fish
+# Nix 配置 (单用户模式)
+if test -e ~/.nix-profile/etc/profile.d/nix.fish
+    source ~/.nix-profile/etc/profile.d/nix.fish
+end
+```
+
 ### Conda/Mamba 环境变量
 
 ```bash

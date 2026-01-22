@@ -21,6 +21,8 @@
 - [Julia 科学计算](#julia-科学计算)
 - [Conda 生态系统](#conda-生态系统)
 - [Node.js 环境](#nodejs-环境)
+- [Homebrew 包管理器](#homebrew-包管理器)
+- [Nix 包管理器](#nix-包管理器)
 - [ROCm 深度学习 (AMD GPU)](#rocm-深度学习-amd-gpu)
 
 ---
@@ -770,6 +772,359 @@ yarn --version
 pnpm --version
 tsc --version
 ```
+
+---
+
+## Homebrew 包管理器
+
+> [!NOTE]
+> **Homebrew on Linux** (又称 Linuxbrew)
+>
+> Homebrew 是 macOS 上最流行的包管理器,也支持 Linux。它提供了一个独立于系统包管理器的包生态,特别适合:
+>
+> - 安装最新版本的工具 (不受系统仓库限制)
+> - 多版本共存
+> - 用户级安装 (无需 sudo)
+
+### Homebrew 安装
+
+```bash
+# 安装 Homebrew (官方脚本)
+/bin/bash -c "$(curl -fsS L https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+
+# 安装过程会自动:
+# 1. 安装必要的依赖 (如 git, curl)
+# 2. 创建 /home/linuxbrew/.linuxbrew 目录
+# 3. 克隆 Homebrew 仓库
+```
+
+### 配置环境变量
+
+```bash
+# 添加到 ~/.bashrc 或 ~/.zshrc
+cat >> ~/.bashrc << 'EOF'
+# Homebrew 配置
+eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+EOF
+
+source ~/.bashrc
+
+# 验证安装
+brew --version
+```
+
+### 配置国内镜像 (可选)
+
+```bash
+# 使用清华镜像加速 (中国大陆用户)
+export HOMEBREW_BREW_GIT_REMOTE="https://mirrors.tuna.tsinghua.edu.cn/git/homebrew/brew.git"
+export HOMEBREW_CORE_GIT_REMOTE="https://mirrors.tuna.tsinghua.edu.cn/git/homebrew/homebrew-core.git"
+export HOMEBREW_BOTTLE_DOMAIN="https://mirrors.tuna.tsinghua.edu.cn/homebrew-bottles"
+
+# 将上述配置添加到 ~/.bashrc
+cat >> ~/.bashrc << 'EOF'
+# Homebrew 镜像加速
+export HOMEBREW_BREW_GIT_REMOTE="https://mirrors.tuna.tsinghua.edu.cn/git/homebrew/brew.git"
+export HOMEBREW_CORE_GIT_REMOTE="https://mirrors.tuna.tsinghua.edu.cn/git/homebrew/homebrew-core.git"
+export HOMEBREW_BOTTLE_DOMAIN="https://mirrors.tuna.tsinghua.edu.cn/homebrew-bottles"
+EOF
+```
+
+### 基本使用
+
+```bash
+# 搜索软件包
+brew search <package>
+
+# 安装软件包
+brew install <package>
+brew install gcc              # 安装 GCC
+brew install ripgrep          # 安装 ripgrep
+
+# 列出已安装的包
+brew list
+
+# 更新 Homebrew 和所有包
+brew update                   # 更新 Homebrew 本身
+brew upgrade                  # 更新所有已安装的包
+brew upgrade <package>        # 更新特定包
+
+# 查看包信息
+brew info <package>
+
+# 卸载软件包
+brew uninstall <package>
+
+# 清理旧版本
+brew cleanup
+```
+
+### 常用工具安装示例
+
+```bash
+# 开发工具
+brew install neovim bat fd ripgrep fzf
+
+# 编程语言 (可用于多版本管理)
+brew install python@3.11 python@3.12
+brew install node@18 node@20
+
+# 数据库
+brew install postgresql mysql redis
+
+# 其他工具
+brew install tmux htop tree jq
+```
+
+### 与系统包管理器共存
+
+> [!TIP]
+> **最佳实践**
+>
+> 1. **系统核心工具**: 使用 DNF 安装 (如 gcc, make, git)
+> 2. **最新版本工具**: 使用 Homebrew 安装
+> 3. **开发工具**: 优先使用语言专用管理器 (rustup, nvm, pyenv)
+> 4. **PATH 优先级**: Homebrew 路径一般放在系统路径之前
+
+```bash
+# Homebrew 安装的工具默认在:
+/home/linuxbrew/.linuxbrew/bin
+
+# 检查命令来源
+which python3              # 查看使用的是哪个 python3
+type -a python3            # 列出所有可用的 python3
+```
+
+---
+
+## Nix 包管理器
+
+> [!NOTE]
+> **Nix 包管理器**
+>
+> Nix 是一个功能强大的跨平台包管理器,特点:
+>
+> - **声明式配置**: 所有包和配置用 Nix 表达式描述
+> - **可复现构建**: 相同配置在任何机器上产生相同结果
+> - **原子性更新**: 升级/回滚系统时不会破坏
+> - **多版本共存**: 不同版本的包可以同时安装
+> - **用户级安装**: 无需 root 权限
+
+### Nix 安装
+
+#### 单用户模式 (推荐)
+
+```bash
+# 单用户安装 (所有内容在 ~/.nix-profile)
+sh <(curl -L https://nixos.org/nix/install) --no-daemon
+
+# 重新加载 shell
+source ~/.nix-profile/etc/profile.d/nix.sh
+```
+
+#### 多用户模式
+
+```bash
+# 多用户安装 (系统级,需要 sudo)
+sh <(curl -L https://nixos.org/nix/install) --daemon
+
+# 安装后会创建 nix-daemon 服务
+sudo systemctl enable nix-daemon
+sudo systemctl start nix-daemon
+```
+
+### 配置环境变量
+
+```bash
+# Nix 会自动添加配置到 ~/.bashrc 或 ~/.zshrc
+# 单用户模式:
+if [ -e ~/.nix-profile/etc/profile.d/nix.sh ]; then
+  . ~/.nix-profile/etc/profile.d/nix.sh
+fi
+
+# 多用户模式:
+if [ -e /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh ]; then
+  . /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
+fi
+```
+
+### 配置国内镜像 (可选)
+
+```bash
+# 使用清华镜像
+mkdir -p ~/.config/nix
+cat > ~/.config/nix/nix.conf << 'EOF'
+substituters = https://mirrors.tuna.tsinghua.edu.cn/nix-channels/store https://cache.nixos.org/
+trusted-public-keys = cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY=
+EOF
+```
+
+### 基本使用
+
+```bash
+# 搜索软件包
+nix search nixpkgs <package>
+nix search nixpkgs python
+
+# 安装软件包 (临时,当前 shell 有效)
+nix-shell -p <package>
+nix-shell -p python3 nodejs
+
+# 安装软件包 (持久到用户环境)
+nix-env -iA nixpkgs.<package>
+nix-env -iA nixpkgs.ripgrep
+nix-env -iA nixpkgs.neovim
+
+# 列出已安装的包
+nix-env -q
+
+# 卸载软件包
+nix-env -e <package>
+
+# 更新所有包
+nix-env -u
+
+# 垃圾回收 (清理未使用的包)
+nix-collect-garbage
+nix-collect-garbage -d        # 删除所有旧版本
+```
+
+### Nix Flakes (现代化 Nix)
+
+```bash
+# 启用 Flakes (实验性功能)
+mkdir -p ~/.config/nix
+cat >> ~/.config/nix/nix.conf << 'EOF'
+experimental-features = nix-command flakes
+EOF
+
+# 使用 flake 运行程序 (无需安装)
+nix run nixpkgs#hello
+nix run nixpkgs#python3
+
+# 创建开发环境 (flake.nix)
+mkdir myproject && cd myproject
+cat > flake.nix << 'EOF'
+{
+  description = "My development environment";
+  
+  inputs = {
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+  };
+  
+  outputs = { self, nixpkgs }: {
+    devShells.x86_64-linux.default = nixpkgs.legacyPackages.x86_64-linux.mkShell {
+      buildInputs = with nixpkgs.legacyPackages.x86_64-linux; [
+        python3
+        nodejs
+        go
+      ];
+    };
+  };
+}
+EOF
+
+# 进入开发环境
+nix develop
+```
+
+### Home Manager (用户环境管理)
+
+```bash
+# Home Manager 用于声明式管理用户环境和dotfiles
+
+# 安装 Home Manager (使用 Flakes)
+nix run home-manager/master -- init
+
+# 编辑配置 ~/.config/home-manager/home.nix
+# 示例配置:
+{ config, pkgs, ... }:
+{
+  home.username = "yyt";
+  home.homeDirectory = "/home/yyt";
+  home.stateVersion = "23.11";
+  
+  home.packages = with pkgs; [
+    bat
+    ripgrep
+    fd
+    htop
+    neovim
+  ];
+  
+  programs.git = {
+    enable = true;
+    userName = "SMLYFM";
+    userEmail = "yytcjx@gmail.com";
+  };
+  
+  programs.bash.enable = true;
+}
+
+# 应用配置
+home-manager switch
+```
+
+### Nix 常用场景
+
+#### 1. 临时测试工具
+
+```bash
+# 临时使用工具而不安装
+nix-shell -p imagemagick
+convert input.png output.jpg
+exit  # 退出后 imagemagick 不再可用
+```
+
+#### 2. 项目特定开发环境
+
+```bash
+# 创建 shell.nix
+cat > shell.nix << 'EOF'
+{ pkgs ? import <nixpkgs> {} }:
+
+pkgs.mkShell {
+  buildInputs = with pkgs; [
+    python311
+    python311Packages.numpy
+    python311Packages.pandas
+  ];
+  
+  shellHook = ''
+    echo "Python development environment loaded"
+    python --version
+  '';
+}
+EOF
+
+# 进入环境
+nix-shell
+```
+
+#### 3. 多版本共存
+
+```bash
+# 同时使用不同版本的工具
+nix-shell -p python38
+nix-shell -p python311
+nix-shell -p python312
+```
+
+> [!WARNING]
+> **Nix 学习曲线**
+>
+> Nix 的声明式配置和函数式语言有一定学习曲线,建议:
+>
+> 1. 先用 `nix-shell` 熟悉临时环境
+> 2. 再尝试 `nix-env` 安装持久包
+> 3. 最后学习 Flakes 和 Home Manager
+
+> [!TIP]
+> **Nix vs Homebrew 选择**
+>
+> - **Homebrew**: 简单易用,类似 apt/dnf,适合日常使用
+> - **Nix**: 声明式配置,可复现环境,适合高级用户和 CI/CD
+> - 两者可以共存,但注意 PATH 优先级
 
 ---
 

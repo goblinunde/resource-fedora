@@ -21,6 +21,8 @@
 - [Julia 科学计算](#julia-科学计算)
 - [Conda 生态系统](#conda-生态系统)
 - [Node.js 环境](#nodejs-环境)
+- [Homebrew 包管理器](#homebrew-包管理器)
+- [Nix 包管理器](#nix-包管理器)
 - [CUDA 深度学习 (NVIDIA GPU)](#cuda-深度学习-nvidia-gpu)
 
 ---
@@ -745,6 +747,175 @@ yarn --version
 pnpm --version
 tsc --version
 ```
+
+---
+
+## Homebrew 包管理器
+
+> [!NOTE]
+> **Homebrew on Linux** (又称 Linuxbrew)
+>
+> Homebrew 是 macOS 上最流行的包管理器,也支持 Linux。它提供了一个独立于系统包管理器的包生态,特别适合:
+>
+> - 安装最新版本的工具 (不受系统仓库限制)
+> - 多版本共存
+> - 用户级安装 (无需 sudo)
+
+### Homebrew 安装
+
+```bash
+# 安装 Homebrew (官方脚本)
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+
+# 安装过程会自动:
+# 1. 安装必要的依赖 (如 git, curl)
+# 2. 创建 /home/linuxbrew/.linuxbrew 目录
+# 3. 克隆 Homebrew 仓库
+```
+
+### 配置环境变量
+
+```bash
+# 添加到 ~/.bashrc 或 ~/.zs hrc
+cat >> ~/.bashrc << 'EOF'
+# Homebrew 配置
+eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+EOF
+
+source ~/.bashrc
+
+# 验证安装
+brew --version
+```
+
+### 配置国内镜像 (可选)
+
+```bash
+# 使用清华镜像加速
+export HOMEBREW_BREW_GIT_REMOTE="https://mirrors.tuna.tsinghua.edu.cn/git/homebrew/brew.git"
+export HOMEBREW_CORE_GIT_REMOTE="https://mirrors.tuna.tsinghua.edu.cn/git/homebrew/homebrew-core.git"
+export HOMEBREW_BOTTLE_DOMAIN="https://mirrors.tuna.tsinghua.edu.cn/homebrew-bottles"
+
+# 添加到 ~/.bashrc
+cat >> ~/.bashrc << 'EOF'
+export HOMEBREW_BREW_GIT_REMOTE="https://mirrors.tuna.tsinghua.edu.cn/git/homebrew/brew.git"
+export HOMEBREW_CORE_GIT_REMOTE="https://mirrors.tuna.tsinghua.edu.cn/git/homebrew/homebrew-core.git"
+export HOMEBREW_BOTTLE_DOMAIN="https://mirrors.tuna.tsinghua.edu.cn/homebrew-bottles"
+EOF
+```
+
+### 基本使用
+
+```bash
+# 搜索软件包
+brew search <package>
+
+# 安装软件包
+brew install <package>
+brew install gcc neovim ripgrep
+
+# 列出已安装的包
+brew list
+
+# 更新
+brew update                   # 更新 Homebrew
+brew upgrade                  # 更新所有包
+
+# 卸载
+brew uninstall <package>
+
+# 清理
+brew cleanup
+```
+
+> [!TIP]
+> **与 APT 共存**
+>
+> 1. **系统核心工具**: 使用 APT 安装
+> 2. **最新版本工具**: 使用 Homebrew 安装
+> 3. **开发工具**: 优先使用语言专用管理器
+
+---
+
+## Nix 包管理器
+
+> [!NOTE]
+> **Nix 包管理器**
+>
+> Nix 是一个功能强大的跨平台包管理器,特点:
+>
+> - **声明式配置**: 所有包和配置用 Nix 表达式描述
+> - **可复现构建**: 相同配置在任何机器上产生相同结果
+> - **原子性更新**: 升级/回滚系统时不会破坏
+> - **多版本共存**: 不同版本的包可以同时安装
+
+### Nix 安装
+
+#### 单用户模式 (推荐)
+
+```bash
+# 单用户安装
+sh <(curl -L https://nixos.org/nix/install) --no-daemon
+
+# 重新加载 shell
+source ~/.nix-profile/etc/profile.d/nix.sh
+```
+
+### 配置国内镜像
+
+```bash
+mkdir -p ~/.config/nix
+cat > ~/.config/nix/nix.conf << 'EOF'
+substituters = https://mirrors.tuna.tsinghua.edu.cn/nix-channels/store https://cache.nixos.org/
+trusted-public-keys = cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY=
+EOF
+```
+
+### 基本使用
+
+```bash
+# 搜索包
+nix search nixpkgs <package>
+
+# 临时使用
+nix-shell -p <package>
+
+# 持久安装
+nix-env -iA nixpkgs.<package>
+
+# 列出已安装
+nix-env -q
+
+# 卸载
+nix-env -e <package>
+
+# 垃圾回收
+nix-collect-garbage -d
+```
+
+### Nix Flakes
+
+```bash
+# 启用 Flakes
+mkdir -p ~/.config/nix
+cat >> ~/.config/nix/nix.conf << 'EOF'
+experimental-features = nix-command flakes
+EOF
+
+# 使用 flake 运行程序
+nix run nixpkgs#hello
+nix run nixpkgs#python3
+
+# 进入开发环境
+nix develop
+```
+
+> [!TIP]
+> **Nix vs Homebrew**
+>
+> - **Homebrew**: 简单易用,适合日常使用
+> - **Nix**: 声明式配置,可复现环境,适合高级用户
+> - 两者可以共存,但注意 PATH 优先级
 
 ---
 

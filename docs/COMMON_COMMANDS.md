@@ -707,6 +707,117 @@ rbenv version
 
 ## 版本管理器
 
+### Homebrew
+
+```bash
+# 搜索包
+brew search <package>
+brew search python
+
+# 安装包
+brew install <package>
+brew install neovim ripgrep bat
+
+# 列出已安装包
+brew list
+
+# 查看包信息
+brew info <package>
+
+# 更新 Homebrew 和所有包
+brew update                   # 更新 Homebrew 本身和仓库列表
+brew upgrade                  # 升级所有已安装的包
+brew upgrade <package>        # 升级特定包
+
+# 卸载包
+brew uninstall <package>
+
+# 清理旧版本
+brew cleanup                  # 清理所有旧版本
+brew cleanup <package>        # 清理特定包的旧版本
+
+# 查看过期包
+brew outdated
+
+# 固定版本 (防止自动更新)
+brew pin <package>
+brew unpin <package>
+
+# 查看服务
+brew services list
+brew services start <service>
+brew services stop <service>
+
+# 诊断问题
+brew doctor
+brew config
+```
+
+---
+
+### Nix
+
+```bash
+# 搜索包
+nix search nixpkgs <package>
+nix search nixpkgs python
+
+# 临时使用 (不安装)
+nix-shell -p <package>
+nix-shell -p python3 nodejs
+
+# 安装包到用户环境
+nix-env -iA nixpkgs.<package>
+nix-env -iA nixpkgs.ripgrep
+nix-env -iA nixpkgs.neovim
+
+# 列出已安装包
+nix-env -q
+
+# 查看包信息
+nix-env -qa <package>
+
+# 更新所有包
+nix-env -u
+
+# 卸载包
+nix-env -e <package>
+
+# 垃圾回收
+nix-collect-garbage
+nix-collect-garbage -d        # 删除所有旧生成
+
+# 列出生成历史
+nix-env --list-generations
+
+# 回滚到上一个生成
+nix-env --rollback
+
+# 切换到特定生成
+nix-env --switch-generation <generation-number>
+
+# 删除旧生成
+nix-env --delete-generations old
+nix-env --delete-generations 10 11 12
+
+# 使用 Flakes (现代化)
+nix run nixpkgs#hello          # 运行包
+nix shell nixpkgs#python3      # 临时 shell
+nix develop                    # 进入开发环境 (需要 flake.nix)
+
+# 查看 Nix store 使用情况
+nix path-info --size --closure-size <store-path>
+nix-store --gc                 # 垃圾回收
+
+# 优化 store
+nix-store --optimise
+
+# 修复 store
+nix-store --verify --check-contents
+```
+
+---
+
 ### NVM (Node.js)
 
 ```bash
