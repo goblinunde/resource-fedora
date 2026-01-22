@@ -23,6 +23,25 @@
 
 ---
 
+## 🛠️ 开发环境配置指南
+
+本仓库提供完整的多语言开发环境配置教程,支持快速搭建编译工具链:
+
+- **📘 [Fedora 开发环境配置](docs/DEV_ENV_FEDORA.md)** - Fedora 43 系统完整工具链安装
+- **📗 [Ubuntu 开发环境配置](docs/DEV_ENV_UBUNTU.md)** - Ubuntu 22.04/24.04 系统工具链安装
+- **📙 [环境变量配置指南](docs/ENV_VARS.md)** - 跨系统环境变量配置参考
+- **📕 [常用命令速查表](docs/COMMON_COMMANDS.md)** - 开发工具常用命令快速查询
+
+**支持的语言与工具**:
+
+- **系统编译**: C/C++ (GCC, Clang), Fortran
+- **现代语言**: Rust, Go, Java, Ruby
+- **Python 生态**: uv (推荐), poetry, pyenv, pixi
+- **科学计算**: Julia, Conda (Mamba, Micromamba)
+- **前端开发**: Node.js (NVM 管理)
+
+---
+
 ## 📁 目录结构
 
 ```text
@@ -64,7 +83,12 @@ resource-fedora/
 │   ├── GEMINI.md            # AI 助手行为准则配置
 │   ├── README.md            # 本文档
 │   └── docs/                # 详细文档目录
-│       └── TMUX.md          # Tmux 配置完整指南
+│       ├── DEV_ENV_FEDORA.md   # Fedora 开发环境配置指南
+│       ├── DEV_ENV_UBUNTU.md   # Ubuntu 开发环境配置指南
+│       ├── ENV_VARS.md         # 环境变量配置指南
+│       ├── COMMON_COMMANDS.md  # 常用命令速查表
+│       ├── TMUX.md          # Tmux 配置完整指南
+│       └── VIM.md           # Vim 配置完整指南
 │
 └── .gitignore               # Git 忽略规则
 ```
