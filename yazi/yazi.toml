@@ -350,8 +350,8 @@ previewers = [
 	# 视频预览
 	{ mime = "video/*", run = "video" },
 	
-	# PDF 预览
-	{ mime = "application/pdf", run = "pdf" },
+	# PDF 预览 - 已在 prepend_previewers 中使用自定义 pdftoppm 预览
+	# { mime = "application/pdf", run = "pdf" },
 	
 	# 压缩包预览
 	{ mime = "application/{zip,rar,7z*,tar,gzip,xz,zstd,bzip*,lzma,compress,archive,cpio,arj,xar,ms-cab*}", run = "archive" },
